@@ -123,7 +123,7 @@ const HeroSection = () => {
             }}
           >
             <img
-              src="/src/assets/burger.png"
+              src="https://jdtxfefnikvizdpsyjni.supabase.co/storage/v1/object/public/image/burger.png"
               alt="Big Burger"
               className="w-full h-auto object-contain"
             />
