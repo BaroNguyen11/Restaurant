@@ -140,9 +140,6 @@ const OfferCard = ({ item }) => {
         addToCart(productToAdd, quantity);
 
         setQuantity(1);
-
-        // You might want to add a toast notification here
-        // e.g., toast.success(`Added ${quantity} ${item.name} to cart!`);
     };
     return (
         <motion.div

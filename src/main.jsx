@@ -29,11 +29,11 @@ createRoot(document.getElementById('root')).render(
               <Route path="/order/order_food" element={<OrderFood />} />
               <Route path="/order/order_table" element={<OrderTable />} />
               <Route path="/product/:id" element={<ProductDetails />} />
-           
+         <Route path="/checkout" element={<Checkout />} />
               <Route path="/contact" element={<Contact />} />
             </Route>
             <Route path="/signin" element={<Signin />} />
-               <Route path="/checkout" element={<Checkout />} />
+   
           </Routes>
         </CartProvider>
       </AuthProvider>

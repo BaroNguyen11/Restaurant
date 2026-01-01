@@ -17,7 +17,7 @@ export const CartProvider = ({ children }) => {
                 // A. NẾU ĐÃ LOGIN: Lấy từ Supabase
                 const { data, error } = await supabase
                     .from('cart_items')
-                    .select('*, product:Products(*)') 
+                    .select('*, product:Products(*)')
                     .eq('user_id', user.id);
 
                 if (data) {
@@ -49,65 +49,123 @@ export const CartProvider = ({ children }) => {
     }, [cartItems, user]);
 
 
-   const addToCart = async (product, quantity = 1) => {
-    // 1. Kiểm tra User
-    if (!user) {
-        setCartItems(prev => {
-            const existing = prev.find(item => item.id === product.id);
-            if (existing) {
-                return prev.map(item => item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item);
-            }
-            return [...prev, { ...product, quantity }];
-        });
-        setIsCartOpen(true);
-        return;
-    }
+    // const addToCart = async (product, quantity = 1) => {
+    //     // 1. Kiểm tra User
+    //     if (!user) {
+    //         setCartItems(prev => {
+    //             const existing = prev.find(item => item.id === product.id);
+    //             if (existing) {
+    //                 return prev.map(item => item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item);
+    //             }
+    //             return [...prev, { ...product, quantity }];
+    //         });
+    //         setIsCartOpen(true);
+    //         return;
+    //     }
 
-    let newCart = [...cartItems];
-    const existingIndex = cartItems.findIndex((item) => item.id === product.id);
-    
-    if (existingIndex > -1) {
-      newCart[existingIndex].quantity += quantity;
-    } else {
-      newCart.push({ ...product, quantity });
-    }
-    setCartItems(newCart);
-    setIsCartOpen(true);
+    //     let newCart = [...cartItems];
+    //     const existingIndex = cartItems.findIndex((item) => item.id === product.id);
 
-    try {
-        const { data: existingItem, error: selectError } = await supabase
-            .from('cart_items')
-            .select('id, quantity')
-            .eq('user_id', user.id)
-            .eq('product_id', product.id)
-            .maybeSingle(); // Dùng maybeSingle để không báo lỗi nếu chưa có
+    //     if (existingIndex > -1) {
+    //         newCart[existingIndex].quantity += quantity;
+    //     } else {
+    //         newCart.push({ ...product, quantity });
+    //     }
+    //     setCartItems(newCart);
+    //     setIsCartOpen(true);
 
-        if (selectError) throw selectError;
+    //     try {
+    //         const { data: existingItem, error: selectError } = await supabase
+    //             .from('cart_items')
+    //             .select('id, quantity')
+    //             .eq('user_id', user.id)
+    //             .eq('product_id', product.id)
+    //             .maybeSingle(); // Dùng maybeSingle để không báo lỗi nếu chưa có
 
-        if (existingItem) {
-            const { error: updateError } = await supabase
-                .from('cart_items')
-                .update({ quantity: existingItem.quantity + quantity })
-                .eq('id', existingItem.id);
-            
-            if (updateError) throw updateError;
-        } else {
-            const { error: insertError } = await supabase
-                .from('cart_items')
-                .insert({
-                    user_id: user.id,
-                    product_id: product.id,
-                    quantity: quantity
-                });
-            
-            if (insertError) throw insertError;
+    //         if (selectError) throw selectError;
+
+    //         if (existingItem) {
+    //             const { error: updateError } = await supabase
+    //                 .from('cart_items')
+    //                 .update({ quantity: existingItem.quantity + quantity })
+    //                 .eq('id', existingItem.id);
+
+    //             if (updateError) throw updateError;
+    //         } else {
+    //             const { error: insertError } = await supabase
+    //                 .from('cart_items')
+    //                 .insert({
+    //                     user_id: user.id,
+    //                     product_id: product.id,
+    //                     quantity: quantity
+    //                 });
+
+    //             if (insertError) throw insertError;
+    //         }
+
+    //     } catch (error) {
+    //         alert("Lỗi lưu giỏ hàng: " + error.message); // Hiện thông báo cho dễ thấy
+    //     }
+    // };
+    const addToCart = async (product, quantity = 1) => {
+        // 👇 1. THAY ĐỔI Ở ĐÂY: Chặn khách chưa đăng nhập
+        if (!user) {
+            navigate('/signin');
+            return; // ⛔ DỪNG LẠI NGAY, không cho chạy code thêm giỏ hàng bên dưới
         }
 
-    } catch (error) {
-        alert("Lỗi lưu giỏ hàng: " + error.message); // Hiện thông báo cho dễ thấy
-    }
-  };
+        // 👇 2. CODE DƯỚI ĐÂY CHỈ CHẠY KHI ĐÃ CÓ USER (Logic Optimistic UI & Supabase)
 
+        // -- Cập nhật Giao diện ngay lập tức (cho mượt) --
+        let newCart = [];
+        const existingIndex = cartItems.findIndex((item) => item.id === product.id);
+
+        if (existingIndex > -1) {
+            newCart = [...cartItems];
+            // Cập nhật kiểu Immutable (An toàn cho React)
+            newCart[existingIndex] = {
+                ...newCart[existingIndex],
+                quantity: newCart[existingIndex].quantity + quantity
+            };
+        } else {
+            newCart = [...cartItems, { ...product, quantity }];
+        }
+
+        setCartItems(newCart);
+        setIsCartOpen(true);
+
+        // -- Đồng bộ lên Supabase --
+        try {
+            const { data: existingItem, error: fetchError } = await supabase
+                .from('cart_items')
+                .select('id, quantity')
+                .eq('user_id', user.id)
+                .eq('product_id', product.id)
+                .maybeSingle(); // Dùng maybeSingle cho an toàn
+
+            if (fetchError) throw fetchError;
+
+            if (existingItem) {
+                // Nếu đã có -> Update số lượng
+                await supabase
+                    .from('cart_items')
+                    .update({ quantity: existingItem.quantity + quantity })
+                    .eq('id', existingItem.id);
+            } else {
+                // Nếu chưa có -> Insert mới
+                await supabase
+                    .from('cart_items')
+                    .insert({
+                        user_id: user.id,
+                        product_id: product.id,
+                        quantity: quantity
+                    });
+            }
+        } catch (error) {
+            console.error("Lỗi đồng bộ giỏ hàng:", error.message);
+            // Có thể thêm toast error ở đây nếu muốn
+        }
+    };
     const removeFromCart = async (productId) => {
         setCartItems((prev) => prev.filter((item) => item.id !== productId));
 

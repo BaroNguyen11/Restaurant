@@ -98,7 +98,7 @@ const Checkout = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#f9f9f9] font-['Poppins'] pt-24 pb-20">
+        <div className="min-h-screen bg-[#f9f9f9] font-['Poppins'] pt-24 pb-20 ">
             <div className="container mx-auto px-4">
 
                 {/* Header */}
