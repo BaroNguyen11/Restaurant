@@ -88,7 +88,7 @@ const About = () => {
              </div>
 
            <Link to='/menu?tab=starters'>
-             <button className="relative overflow-hidden cursor-pointer bg-[#9e1c20] text-white font-bold py-4 px-10 rounded-sm shadow-lg group">
+             <button className="relative overflow-hidden cursor-pointer bg-[#9e1c20] text-white font-bold py-4 px-10 rounded-full shadow-lg group">
                  <span className="absolute inset-0 bg-black/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                  <span className="relative flex items-center gap-2 uppercase tracking-wide">
                     Visit Our Restaurant <ArrowRight className="w-5 h-5" />

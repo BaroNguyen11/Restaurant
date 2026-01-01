@@ -70,7 +70,7 @@ const CTA = () => {
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
             {/* Nút đặt bàn */}
-            <button className="group relative bg-[#F51E46] text-white font-bold px-8 py-4 rounded-full shadow-[0_10px_30px_rgba(245,30,70,0.4)] hover:shadow-[0_10px_20px_rgba(245,30,70,0.6)] hover:-translate-y-1 transition-all duration-300 flex items-center gap-2 overflow-hidden cursor-pointer">
+            <button className="group relative bg-[#9e1c20] text-white font-bold px-8 py-4 rounded-full shadow-[0_10px_30px_rgba(245,30,70,0.4)] hover:shadow-[0_10px_20px_rgba(245,30,70,0.6)] hover:-translate-y-1 transition-all duration-300 flex items-center gap-2 overflow-hidden cursor-pointer">
                 <span className="relative z-10 flex items-center gap-2">
                     Book Your Table <CalendarCheck size={20} />
                 </span>

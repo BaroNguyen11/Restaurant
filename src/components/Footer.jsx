@@ -39,7 +39,7 @@ const Footer = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="bg-[#F51E46] text-white p-10 rounded-[40px] shadow-2xl relative overflow-hidden"
+              className="bg-[#9e1c20] text-white p-10 rounded-[40px] shadow-2xl relative overflow-hidden"
             >
                 {/* Logo trong thẻ đỏ */}
                 <div className="flex items-center gap-2 mb-8">
@@ -71,8 +71,8 @@ const Footer = () => {
             <ul className="space-y-3">
                 {['Fredoka One', 'Special Dish', 'Reservation', 'Contact'].map((item, idx) => (
                     <li key={idx}>
-                        <a href="#" className="flex items-center gap-2 text-gray-600 hover:text-[#F51E46] transition-colors font-medium group">
-                            <ChevronRight size={16} className="text-[#F51E46] opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
+                        <a href="#" className="flex items-center gap-2 text-gray-600 hover:text-[#9e1c20] transition-colors font-medium group">
+                            <ChevronRight size={16} className="text-[#9e1c20] opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
                             <span className="-translate-x-4 group-hover:translate-x-0 transition-transform duration-300">{item}</span>
                         </a>
                     </li>
@@ -89,8 +89,8 @@ const Footer = () => {
             <ul className="space-y-3">
                 {['Steaks', 'Burgers', 'Cocktails', 'Bar B Q', 'Desserts'].map((item, idx) => (
                     <li key={idx}>
-                         <a href="#" className="flex items-center gap-2 text-gray-600 hover:text-[#F51E46] transition-colors font-medium group">
-                            <ChevronRight size={16} className="text-[#F51E46] opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
+                         <a href="#" className="flex items-center gap-2 text-gray-600 hover:text-[#9e1c20] transition-colors font-medium group">
+                            <ChevronRight size={16} className="text-[#9e1c20] opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
                             <span className="-translate-x-4 group-hover:translate-x-0 transition-transform duration-300">{item}</span>
                         </a>
                     </li>
@@ -110,9 +110,9 @@ const Footer = () => {
                 <input 
                     type="email" 
                     placeholder="Email Address" 
-                    className="w-full px-6 py-4 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#F51E46] focus:ring-1 focus:ring-[#F51E46] transition-all shadow-sm"
+                    className="w-full px-6 py-4 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#9e1c20] focus:ring-1 focus:ring-[#9e1c20] transition-all shadow-sm"
                 />
-                <button className="w-fit bg-[#F51E46] text-white font-bold px-8 py-4 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all border-2 border-[#F51E46] flex items-center gap-2">
+                <button className="w-fit bg-[#9e1c20] text-white font-bold px-8 py-4 rounded-full cursor-pointer shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all border-2 border-[#9e1c20] flex items-center gap-2">
                     Subscribe <Send size={18} />
                 </button>
             </form>
@@ -129,14 +129,14 @@ const Footer = () => {
         <div className="container mx-auto px-4 py-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                 <p className="text-gray-600 text-sm font-bold">
-                    <span className="text-[#F51E46]">© 2025 TasteNest</span> | All rights reserved
+                    <span className="text-[#9e1c20]">© 2025 TasteNest</span> | All rights reserved
                 </p>
                 
                 <div className="flex items-center gap-6">
-                    <a href="#" className="flex items-center gap-2 font-bold text-gray-900 hover:text-[#F51E46] transition-colors">
+                    <a href="#" className="flex items-center gap-2 font-bold text-gray-900 hover:text-[#9e1c20] transition-colors">
                         Facebook <Facebook size={18} />
                     </a>
-                    <a href="#" className="flex items-center gap-2 font-bold text-gray-900 hover:text-[#F51E46] transition-colors">
+                    <a href="#" className="flex items-center gap-2 font-bold text-gray-900 hover:text-[#9e1c20] transition-colors">
                         Instagram <Instagram size={18} />
                     </a>
                 </div>

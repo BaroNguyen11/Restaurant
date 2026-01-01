@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: window.location.origin // Quay về trang chủ sau khi login
+                   redirectTo: window.location.origin
                 }
             });
             if (error) throw error;
@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, signInWithGoogle, signOut, loading }}>
+        <AuthContext.Provider value={{ user, signInWithGoogle, signOut, loading, registerWithEmail, loginWithEmail }}>
             {!loading && children}
         </AuthContext.Provider>
     );

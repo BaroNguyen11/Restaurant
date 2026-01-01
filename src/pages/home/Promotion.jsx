@@ -122,7 +122,7 @@ const OfferCard = ({ item }) => {
     const stock = item.total - item.sold;
     const percentSold = (item.sold / item.total) * 100;
     const { addToCart } = useCart();
-    
+
     const handleDecrease = () => {
         if (quantity > 1) setQuantity(quantity - 1);
     };
@@ -134,7 +134,7 @@ const OfferCard = ({ item }) => {
     const handleAddToCart = () => {
         const productToAdd = {
             ...item,
-            price: item.salePrice, 
+            price: item.salePrice,
         };
 
         addToCart(productToAdd, quantity);
@@ -245,7 +245,7 @@ const Promotion = () => {
     const formatNumber = (num) => String(num).padStart(2, '0');
     const timerComponents = [
         { label: 'Days', value: timeLeft.days },
-        { label: 'Hrs', value: timeLeft.hours },
+        { label: 'Hours', value: timeLeft.hours },
         { label: 'Mins', value: timeLeft.minutes },
         { label: 'Secs', value: timeLeft.seconds },
     ];
@@ -270,7 +270,7 @@ const Promotion = () => {
                     <div className="flex gap-3 md:gap-4">
                         {timerComponents.map((item, idx) => (
                             <div key={idx} className="text-center group">
-                                <div className="bg-[#9e1c20] text-white w-12 h-12 md:w-16 md:h-16 rounded-lg flex items-center justify-center text-xl md:text-2xl font-bold shadow-lg transition-colors duration-300">
+                                <div className="bg-[#9e1c20] text-white w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-xl md:text-2xl font-bold shadow-lg transition-colors duration-300">
                                     {formatNumber(item.value)}
                                 </div>
                                 <span className="text-[10px] md:text-xs font-bold text-gray-500 mt-2 block uppercase tracking-wide">{item.label}</span>

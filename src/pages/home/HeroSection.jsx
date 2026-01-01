@@ -1,5 +1,7 @@
-import { Phone } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+
 const HeroSection = () => {
   const slideInLeft = {
     hidden: { x: '-100%', opacity: 0 },
@@ -28,7 +30,7 @@ const HeroSection = () => {
     <div className="flex flex-col md:flex-row w-full min-h-165 overflow-hidden font-['Poppins'] ">
 
       {/* --- PHẦN TRÁI (MÀU ĐỎ) --- */}
-      <div className="relative w-full md:w-[45%] bg-[#9e1c20] text-white p-8 md:p-16 flex flex-col justify-center text-center z-10">
+      <div className="relative w-full md:w-[50%] bg-[#9e1c20] text-white p-8 md:p-16 flex flex-col justify-center text-center z-10">
         <motion.div
           initial="hidden"
           animate="visible"
@@ -75,19 +77,23 @@ const HeroSection = () => {
 
           {/* Nút gọi & Số điện thoại */}
           <div className="flex items-center justify-center gap-4">
-            <button className="flex items-center gap-2 bg-transparent text-white text-xl font-bold">
-              <Phone fill="white" className="w-6 h-6" />
-              Call Now:
-            </button>
-            <span className="bg-[#FFA500] text-[#9e1c20] font-bold px-6 py-3 rounded-full text-lg shadow-lg">
-              +123 456 6890
-            </span>
+
+            <Link to='/order/order_food'>
+              <button className="bg-[#FFA500] text-[#9e1c20] font-bold px-6 py-3 rounded-full text-lg shadow-lg cursor-pointer hover:bg-[#ffb733] transition-colors duration-300">
+                Order now!
+              </button>
+            </Link>
+            <Link to='/menu'>
+              <button className="flex items-center gap-2  border-2  px-5 py-3 rounded-full text-lg font-semibold bg-white text-[#9e1c20] transition-colors duration-300 cursor-pointer">
+                Explore <ArrowRight className="w-5 h-5" />
+              </button>
+            </Link>
           </div>
         </motion.div>
       </div>
 
       {/* --- PHẦN PHẢI (MÀU KEM) --- */}
-      <div className="relative w-full md:w-[55%] bg-[#fff8f0] flex items-center justify-center p-10 overflow-hidden">
+      <div className="relative w-full md:w-[50%] bg-[#fff8f0] flex items-center justify-center p-10 overflow-hidden">
 
         {/* Họa tiết trang trí nền (Icon mờ, hình học...) */}
         <div className="absolute top-10 right-10 text-[#FFA500]">✦</div>

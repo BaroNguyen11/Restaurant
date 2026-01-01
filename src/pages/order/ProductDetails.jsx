@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Star, Heart, Minus, Plus, ShoppingCart, Check, ChevronRight } from 'lucide-react';
+import { Star, Minus, Plus, ShoppingCart, Check, ChevronRight } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { supabase } from '../../api'; // Import Supabase Client
 
@@ -109,11 +109,6 @@ const ProductDetails = () => {
                     alt={product.name} 
                     className="w-full h-full object-contain drop-shadow-2xl z-10 group-hover:scale-110 transition-transform duration-500 ease-in-out"
                 />
-                
-                {/* Nút yêu thích */}
-                 <button className="absolute top-6 right-6 w-12 h-12 bg-white rounded-full flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 shadow-xl transition-all z-20">
-                    <Heart size={24} fill="currentColor" className="transition-transform active:scale-75" />
-                </button>
             </motion.div>
 
             {/* Cột Phải: Thông Tin */}

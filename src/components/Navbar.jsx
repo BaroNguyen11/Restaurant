@@ -103,12 +103,12 @@ const Navbar = () => {
               <li className="row-span-3">
                 <NavigationMenuLink asChild>
                   <Link
-                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-linear-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md bg-[#9e1c20] relative overflow-hidden group"
+                    className="flex h-full w-full select-none flex-col justify-end rounded-md hover:bg-[#b33338]! from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md bg-[#9e1c20] relative overflow-hidden group"
                     to="/order/order_food"
                   >
                     {/* Ảnh nền mờ */}
-                    <img src="https://png.pngtree.com/png-vector/20230414/ourmid/pngtree-burger-transparent-background-png-image_6705708.png"
-                      className="absolute -right-5 -top-5 w-32 opacity-20 rotate-12 group-hover:opacity-30 group-hover:scale-110 transition-all duration-500" />
+                    <img src="https://godrejyummiez.in/images/products/details/Non-Veg/Crispy_Fried_Chicken_Plate.png"
+                      className="absolute -right-5 -top-5 w-32 opacity-2 rotate-12  group-hover:scale-110 transition-all duration-500" />
 
                     <div className="relative z-10">
                       <Flame className="h-6 w-6 text-[#FFA500] mb-2 animate-pulse" />
