@@ -21,7 +21,7 @@ const Header = () => {
             <header className="flex justify-around items-center fixed top-0 left-0 w-full h-20 bg-white shadow-md z-50 px-4 md:px-8 ">
                 <Link to='/'>
                     <div className="flex items-center gap-2">
-                        <img src="/src/assets/logo.png" alt="Logo" className="w-30" />
+                        <img src="https://jdtxfefnikvizdpsyjni.supabase.co/storage/v1/object/public/image/logo.png" alt="Logo" className="w-30" />
                     </div>
                 </Link>
                 <Navbar />
