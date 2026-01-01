@@ -1,6 +1,7 @@
 import { motion, useMotionValue, useTransform, animate, useInView } from "framer-motion";
 import React, { useEffect, useRef } from "react";
 import { ArrowRight } from 'lucide-react';
+import { Link } from "react-router-dom";
 
 // --- MOCK DATA ---
 const features = [
@@ -132,9 +133,11 @@ const WhyChooseUs = () => {
                                 </p>
 
                                 {/* Nút Read More */}
-                                <button className="inline-flex items-center gap-2 font-bold text-[#9e1c20] group-hover:text-black transition-colors uppercase text-sm tracking-wide">
-                                    Read More <ArrowRight size={16} />
-                                </button>
+                                <Link to='/about'>
+                                    <button className="inline-flex items-center gap-2 font-bold text-[#9e1c20] group-hover:text-black transition-colors uppercase text-sm tracking-wide cursor-pointer">
+                                        Read More <ArrowRight size={16} />
+                                    </button>
+                                </Link>
                             </div>
                         </motion.div>
                     ))}
@@ -148,7 +151,7 @@ const WhyChooseUs = () => {
                         { label: "Expert Chefs", value: "20+" },
                         { label: "Years Experience", value: "12+" },
                     ].map((stat, index) => (
-                      <StatItem key={index} stat={stat} index={index} />
+                        <StatItem key={index} stat={stat} index={index} />
                     ))}
                 </div>
 

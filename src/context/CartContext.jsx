@@ -9,6 +9,7 @@ export const useCart = () => useContext(CartContext);
 export const CartProvider = ({ children }) => {
     const [cartItems, setCartItems] = useState([]);
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
     const { user } = useAuth();
     const navigate = useNavigate();
     useEffect(() => {
@@ -52,7 +53,7 @@ export const CartProvider = ({ children }) => {
     const addToCart = async (product, quantity = 1) => {
         if (!user) {
             navigate('/signin');
-            return; 
+            return;
         }
         let newCart = [];
         const existingIndex = cartItems.findIndex((item) => item.id === product.id);
@@ -146,9 +147,14 @@ export const CartProvider = ({ children }) => {
     // Mở/Đóng giỏ hàng
     const toggleCart = () => {
         if (!user) {
-            navigate('/signin');
+            if (isCartOpen) {
+                setIsCartOpen(false);
+                return;
+            }
+            setShowLoginModal(true);
+            return;
         }
-        setIsCartOpen(!isCartOpen)
+        setIsCartOpen(!isCartOpen);
     };
     // Tính tổng tiền
     const cartTotal = cartItems.reduce(
@@ -171,6 +177,8 @@ export const CartProvider = ({ children }) => {
                 cartTotal,
                 cartCount,
                 clearCart,
+                showLoginModal,
+                setShowLoginModal
             }}
         >
             {children}

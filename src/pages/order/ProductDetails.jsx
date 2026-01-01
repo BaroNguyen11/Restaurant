@@ -165,7 +165,7 @@ const ProductDetails = () => {
                     {/* Nút Add to Cart */}
                     <button 
                         onClick={handleAddToCart}
-                        className="flex-1 bg-[#F51E46] text-white font-bold rounded-full h-14 px-8 shadow-lg shadow-red-200 hover:bg-black hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 text-lg"
+                        className="flex-1 bg-[#9e1c20] text-white font-bold rounded-full h-14 px-8 shadow-lg shadow-red-200 hover:bg-[#c83035] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 text-lg cursor-pointer"
                     >
                         Add To Cart <ShoppingCart size={22} />
                     </button>

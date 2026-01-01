@@ -162,6 +162,7 @@ const Contact = () => {
                                     <input
                                         type="text"
                                         name='fullName'
+                                        required
                                         placeholder="Your Name"
                                         className="w-full bg-[#f4f1ea] py-4 pl-6 pr-10 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#9e1c20]"
                                         value={formData.fullName}
@@ -174,6 +175,7 @@ const Contact = () => {
                                     <input
                                         type="email"
                                         name='email'
+                                        required
                                         placeholder="Your Email"
                                         className="w-full bg-[#f4f1ea] py-4 pl-6 pr-10 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#9e1c20]"
                                         onChange={handleChange}
@@ -208,6 +210,7 @@ const Contact = () => {
                                     placeholder="Write Messages..."
                                     className="w-full bg-[#f4f1ea] py-4 pl-6 pr-10 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#9e1c20] resize-none"
                                     name='message'
+                                    required
                                     onChange={handleChange}
                                     value={formData.message}
                                 ></textarea>
