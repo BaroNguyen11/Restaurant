@@ -7,12 +7,13 @@ import { useAuth } from '@/context/AuthContext';
 import { LogOut, User } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 const Header = () => {
-    const { toggleCart, cartCount } = useCart();
+    const { toggleCart, cartCount, clearCart } = useCart();
     const { user, signOut } = useAuth();
     const [showLogoutModal, setShowLogoutModal] = useState(false);
 
     const handleConfirmLogout = () => {
         signOut();
+        clearCart();
         setShowLogoutModal(false);
         // Có thể thêm navigate('/') nếu cần
     };
@@ -74,7 +75,7 @@ const Header = () => {
                             <Link to="/signin">
                                 <button
 
-                                    className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-full font-bold text-sm hover:bg-[#9e1c20] transition-colors shadow-lg"
+                                    className="flex items-center gap-2 bg-[#9e1c20] text-white px-5 py-2.5 rounded-full font-bold text-sm hover:bg-[#a2383c] transition-colors shadow-lg cursor-pointer"
                                 >
                                     <User size={16} /> Sign in
                                 </button>

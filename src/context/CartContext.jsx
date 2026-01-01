@@ -49,80 +49,16 @@ export const CartProvider = ({ children }) => {
     }, [cartItems, user]);
 
 
-    // const addToCart = async (product, quantity = 1) => {
-    //     // 1. Kiểm tra User
-    //     if (!user) {
-    //         setCartItems(prev => {
-    //             const existing = prev.find(item => item.id === product.id);
-    //             if (existing) {
-    //                 return prev.map(item => item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item);
-    //             }
-    //             return [...prev, { ...product, quantity }];
-    //         });
-    //         setIsCartOpen(true);
-    //         return;
-    //     }
-
-    //     let newCart = [...cartItems];
-    //     const existingIndex = cartItems.findIndex((item) => item.id === product.id);
-
-    //     if (existingIndex > -1) {
-    //         newCart[existingIndex].quantity += quantity;
-    //     } else {
-    //         newCart.push({ ...product, quantity });
-    //     }
-    //     setCartItems(newCart);
-    //     setIsCartOpen(true);
-
-    //     try {
-    //         const { data: existingItem, error: selectError } = await supabase
-    //             .from('cart_items')
-    //             .select('id, quantity')
-    //             .eq('user_id', user.id)
-    //             .eq('product_id', product.id)
-    //             .maybeSingle(); // Dùng maybeSingle để không báo lỗi nếu chưa có
-
-    //         if (selectError) throw selectError;
-
-    //         if (existingItem) {
-    //             const { error: updateError } = await supabase
-    //                 .from('cart_items')
-    //                 .update({ quantity: existingItem.quantity + quantity })
-    //                 .eq('id', existingItem.id);
-
-    //             if (updateError) throw updateError;
-    //         } else {
-    //             const { error: insertError } = await supabase
-    //                 .from('cart_items')
-    //                 .insert({
-    //                     user_id: user.id,
-    //                     product_id: product.id,
-    //                     quantity: quantity
-    //                 });
-
-    //             if (insertError) throw insertError;
-    //         }
-
-    //     } catch (error) {
-    //         alert("Lỗi lưu giỏ hàng: " + error.message); // Hiện thông báo cho dễ thấy
-    //     }
-    // };
     const addToCart = async (product, quantity = 1) => {
-        // 👇 1. THAY ĐỔI Ở ĐÂY: Chặn khách chưa đăng nhập
         if (!user) {
             navigate('/signin');
-            return; // ⛔ DỪNG LẠI NGAY, không cho chạy code thêm giỏ hàng bên dưới
+            return; 
         }
-
-        // 👇 2. CODE DƯỚI ĐÂY CHỈ CHẠY KHI ĐÃ CÓ USER (Logic Optimistic UI & Supabase)
-
-        // -- Cập nhật Giao diện ngay lập tức (cho mượt) --
         let newCart = [];
         const existingIndex = cartItems.findIndex((item) => item.id === product.id);
 
         if (existingIndex > -1) {
             newCart = [...cartItems];
-            // Cập nhật kiểu Immutable (An toàn cho React)
             newCart[existingIndex] = {
                 ...newCart[existingIndex],
                 quantity: newCart[existingIndex].quantity + quantity
