@@ -9,49 +9,61 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
-import { CircleCheckIcon, CircleHelpIcon, CircleIcon } from 'lucide-react';
-import { Link } from 'react-router-dom';
-
-const components = [
+import { 
+  Coffee, 
+  Pizza, 
+  Utensils, 
+  IceCream, 
+  Beer, 
+  ChefHat, 
+  Flame 
+} from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+const menuCategories = [
   {
-    title: 'Alert Dialog',
-    href: '/docs/alert-dialog',
-    description: 'A modal dialog that interrupts the user with important content and expects a response.',
+    title: 'Starters',
+    href: '/menu?tab=starters',
+    description: 'Light bites to start your meal.',
+    icon: ChefHat
   },
   {
-    title: 'Hover Card',
-    href: '/docs/hover-card',
-    description: 'For sighted users to preview content available behind a link.',
+    title: 'Breakfast',
+    href: '/menu?tab=breakfast',
+    description: 'Start your day with energy.',
+    icon: Coffee
   },
   {
-    title: 'Progress',
-    href: '/docs/progress',
-    description:
-      'Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.',
+    title: 'Main Course',
+    href: '/menu?tab=main',
+    description: 'Hearty meals, steaks & grills.',
+    icon: Utensils
   },
   {
-    title: 'Scroll-area',
-    href: '/docs/scroll-area',
-    description: 'Visually or semantically separates content.',
+    title: 'Pizza & Burger',
+    href: '/menu?tab=pizza',
+    description: 'Cheesy pizzas and juicy burgers.',
+    icon: Pizza
   },
   {
-    title: 'Tabs',
-    href: '/docs/tabs',
-    description: 'A set of layered sections of content—known as tab panels—that are displayed one at a time.',
+    title: 'Desserts',
+    href: '/menu?tab=dessert',
+    description: 'Sweet treats to finish.',
+    icon: IceCream
   },
   {
-    title: 'Tooltip',
-    href: '/docs/tooltip',
-    description:
-      'A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.',
+    title: 'Drinks',
+    href: '/menu?tab=drinks',
+    description: 'Refreshing cocktails & juices.',
+    icon: Beer
   },
 ];
+
 
 function ListItem({ title, children, href, ...props }) {
   return (
     <li {...props}>
       <NavigationMenuLink asChild>
-        <Link href={href}>
+        <Link to={href}>
           <div className="text-sm leading-none font-medium">{title}</div>
           <p className="text-muted-foreground line-clamp-2 text-sm leading-snug">{children}</p>
         </Link>
@@ -61,126 +73,110 @@ function ListItem({ title, children, href, ...props }) {
 }
 
 const Navbar = () => {
+  const location = useLocation();
+  const isActive = (path) => location.pathname === path;
+  const isOrderActive = isActive('/order/order_food') || isActive('/order/order_table');
+  const getLinkStyle = (path) => `
+    ${navigationMenuTriggerStyle()} 
+    ${isActive(path) ? '!text-[#9e1c20] !bg-[#fff8f0] ' : 'text-gray-600'}
+    text-base px-6
+  `;
   return (
     <NavigationMenu viewport={false}>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Home</NavigationMenuTrigger>
+          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+            <Link to="/" className={getLinkStyle('/')}>Home</Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+            <Link to="/about" className={getLinkStyle('/about')}>About</Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger className={getLinkStyle('/menu')}>Menu</NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid gap-2 md:w-100 lg:w-125 lg:grid-cols-[.75fr_1fr]">
+            <ul className="grid gap-3 p-4 md:w-100 lg:w-125 lg:grid-cols-[.75fr_1fr]">
+
+              {/* CỘT TRÁI: FEATURED CARD (Món nổi bật) */}
               <li className="row-span-3">
                 <NavigationMenuLink asChild>
                   <Link
-                    className="from-muted/50 to-muted flex h-full w-full flex-col justify-end rounded-md bg-linear-to-b p-6 no-underline outline-hidden select-none focus:shadow-md"
-                    href="/"
+                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-linear-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md bg-[#9e1c20] relative overflow-hidden group"
+                    to="/order/order_food"
                   >
-                    <div className="mt-4 mb-2 text-lg font-medium">ReUI</div>
-                    <p className="text-muted-foreground text-sm leading-tight">
-                      Beautifully designed components built with React and Tailwind CSS.
-                    </p>
+                    {/* Ảnh nền mờ */}
+                    <img src="https://png.pngtree.com/png-vector/20230414/ourmid/pngtree-burger-transparent-background-png-image_6705708.png"
+                      className="absolute -right-5 -top-5 w-32 opacity-20 rotate-12 group-hover:opacity-30 group-hover:scale-110 transition-all duration-500" />
+
+                    <div className="relative z-10">
+                      <Flame className="h-6 w-6 text-[#FFA500] mb-2 animate-pulse" />
+                      <div className="mb-2 mt-2 text-lg font-black text-white">
+                        Special Offer
+                      </div>
+                      <p className="text-sm leading-tight text-white/80 mb-4">
+                        Get 20% off on all Burgers this weekend!
+                      </p>
+                      <span className="bg-white text-[#9e1c20] px-3 py-1.5 rounded-full text-xs font-bold shadow-sm group-hover:bg-[#FFA500] group-hover:text-white transition-colors">
+                        Order Now
+                      </span>
+                    </div>
                   </Link>
                 </NavigationMenuLink>
               </li>
-              <ListItem href="/docs" title="Introduction">
-                Re-usable components built using Radix UI and Tailwind CSS.
-              </ListItem>
-              <ListItem href="/docs/installation" title="Installation">
-                How to install dependencies and structure your app.
-              </ListItem>
-              <ListItem href="/docs/primitives/typography" title="Typography">
-                Styles for headings, paragraphs, lists...etc
-              </ListItem>
+
+              {/* CỘT PHẢI: DANH SÁCH MENU */}
+              {menuCategories.map((component) => (
+                <ListItem
+                  key={component.title}
+                  title={component.title}
+                  href={component.href}
+                  icon={component.icon}
+                >
+                  {component.description}
+                </ListItem>
+              ))}
+
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger>About</NavigationMenuTrigger>
+          <NavigationMenuTrigger 
+          className={`
+                ${navigationMenuTriggerStyle()} 
+                ${isOrderActive ? 'text-[#9e1c20]! bg-[#fff8f0]! ' : 'text-gray-600'}
+                text-base px-6 bg-transparent
+            `}
+          >Order</NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-100 gap-2 md:w-125 md:grid-cols-2 lg:w-150">
-              {components.map((component) => (
-                <ListItem key={component.title} title={component.title} href={component.href}>
-                  {component.description}
-                </ListItem>
-              ))}
+            <ul className="grid w-50 gap-4">
+              <li>
+                <NavigationMenuLink asChild>
+                  <Link to="/order/order_food" className="flex-row items-center gap-2">
+                    <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 416 512" className="text-xs" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M207.9 15.2c.8 4.7 16.1 94.5 16.1 128.8 0 52.3-27.8 89.6-68.9 104.6L168 486.7c.7 13.7-10.2 25.3-24 25.3H80c-13.7 0-24.7-11.5-24-25.3l12.9-238.1C27.7 233.6 0 196.2 0 144 0 109.6 15.3 19.9 16.1 15.2 19.3-5.1 61.4-5.4 64 16.3v141.2c1.3 3.4 15.1 3.2 16 0 1.4-25.3 7.9-139.2 8-141.8 3.3-20.8 44.7-20.8 47.9 0 .2 2.7 6.6 116.5 8 141.8.9 3.2 14.8 3.4 16 0V16.3c2.6-21.6 44.8-21.4 48-1.1zm119.2 285.7l-15 185.1c-1.2 14 9.9 26 23.9 26h56c13.3 0 24-10.7 24-24V24c0-13.2-10.7-24-24-24-82.5 0-221.4 178.5-64.9 300.9z"></path>
+                    </svg>
+                    Order food
+                  </Link>
+                </NavigationMenuLink>
+                <NavigationMenuLink asChild>
+                  <Link to="/order/order_table" className="flex-row items-center gap-2">
+                    <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 448 512" className="text-xs" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M112 128c0-29.5 16.2-55 40-68.9V256h48V48h48v208h48V59.1c23.8 13.9 40 39.4 40 68.9v128h48V128C384 57.3 326.7 0 256 0h-64C121.3 0 64 57.3 64 128v128h48zm334.3 213.9l-10.7-32c-4.4-13.1-16.6-21.9-30.4-21.9H42.7c-13.8 0-26 8.8-30.4 21.9l-10.7 32C-5.2 362.6 10.2 384 32 384v112c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V384h256v112c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V384c21.8 0 37.2-21.4 30.3-42.1z">
+                      </path>
+                    </svg>
+                    Reverse a table
+                  </Link>
+                </NavigationMenuLink>
+              </li>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link href="/docs">Menu</Link>
+            <Link to="/contact" className={getLinkStyle('/contact')}>Contact</Link>
           </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Pages</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-75 gap-4">
-              <li>
-                <NavigationMenuLink asChild>
-                  <Link href="#">
-                    <div className="font-medium">Components</div>
-                    <div className="text-muted-foreground">Browse all components in the library.</div>
-                  </Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink asChild>
-                  <Link href="#">
-                    <div className="font-medium">Documentation</div>
-                    <div className="text-muted-foreground">Learn how to use the library.</div>
-                  </Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink asChild>
-                  <Link href="#">
-                    <div className="font-medium">Blog</div>
-                    <div className="text-muted-foreground">Read our latest blog posts.</div>
-                  </Link>
-                </NavigationMenuLink>
-              </li>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Blog</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-50 gap-4">
-              <li>
-                <NavigationMenuLink asChild>
-                  <Link href="#">Components</Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink asChild>
-                  <Link href="#">Documentation</Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink asChild>
-                  <Link href="#">Blocks</Link>
-                </NavigationMenuLink>
-              </li>
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Contact</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-50 gap-4">
-              <li>
-                <NavigationMenuLink asChild>
-                  <Link href="#" className="flex-row items-center gap-2">
-                    <CircleHelpIcon className="size-4" />
-                    Backlog
-                  </Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink asChild>
-                  <Link href="#" className="flex-row items-center gap-2">
-                    <CircleIcon className="size-4" />
-                    To Do
-                  </Link>
-                </NavigationMenuLink>
-                <NavigationMenuLink asChild>
-                  <Link href="#" className="flex-row items-center gap-2">
-                    <CircleCheckIcon className="size-4" />
-                    Done
-                  </Link>
-                </NavigationMenuLink>
-              </li>
-            </ul>
-          </NavigationMenuContent>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

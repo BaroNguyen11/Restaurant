@@ -25,7 +25,7 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row w-full min-h-165 overflow-hidden font-['Poppins'] mt-20">
+    <div className="flex flex-col md:flex-row w-full min-h-165 overflow-hidden font-['Poppins'] ">
 
       {/* --- PHẦN TRÁI (MÀU ĐỎ) --- */}
       <div className="relative w-full md:w-[45%] bg-[#9e1c20] text-white p-8 md:p-16 flex flex-col justify-center text-center z-10">

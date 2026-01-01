@@ -1,12 +1,23 @@
 import Header from "../../components/Header"
+import BestSellingFood from "./BestSelling";
+import About from "./About";
 import HeroSection from "./HeroSection";
+import Promotion from "./Promotion";
+import CustomerReviews from "./CustomerReviews";
+import WhyChooseUs from "./WhyChooseUs";
+import CTA from "./CTA";
 
 
 const Home = () => {
     return(
         <>
-           <Header />
            <HeroSection />
+           <BestSellingFood />
+           <About />
+           <Promotion />
+           <CustomerReviews />
+           <WhyChooseUs />
+           <CTA />
         </>
     )
 }
