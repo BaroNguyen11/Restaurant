@@ -107,7 +107,7 @@ const getStatusColor = (status) => {
         }
     };
     return (
-        <div className="min-h-screen bg-[#f9f9f9] font-['Poppins'] py-10 pt-24">
+        <div className="min-h-screen bg-[#f9f9f9] font-['Poppins'] py-10 ">
             <div className="container mx-auto px-4">
                 <h1 className="text-3xl font-black text-gray-900 mb-8">My Account</h1>
 

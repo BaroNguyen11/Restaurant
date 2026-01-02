@@ -19,6 +19,12 @@ import ScrollToTop from './pages/ScrollToTop'
 import ModalLogin from './components/ModalLogin'
 import Chatbot from './components/ChatBot'
 import Profile from './pages/profile/Profile'
+import DashBoard from './admin/DashBoard'
+import Admin from './admin/Admin'
+import AdminProducts from './admin/AdminProducts'
+import AdminOrders from './admin/AdminOrders'
+import AdminReviews from './admin/AdminReviews'
+import AdminReservations from './admin/AdminReservations'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -27,7 +33,7 @@ createRoot(document.getElementById('root')).render(
       <AuthProvider>
         <CartProvider>
           <ModalLogin />
-          <Chatbot/>
+          <Chatbot />
           <Routes>
             <Route path="/" element={<App />} >
               <Route index element={<Home />} />
@@ -38,10 +44,17 @@ createRoot(document.getElementById('root')).render(
               <Route path="/product/:id" element={<ProductDetails />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/profile" element={<Profile/>}/>
+              <Route path="/profile" element={<Profile />} />
               <Route path="*" element={<NotFound />} />
             </Route>
             <Route path="/signin" element={<Signin />} />
+            <Route path='/admin' element={<Admin />}>
+              <Route index element={<DashBoard />} />
+              <Route path='products' element={<AdminProducts />} />
+              <Route path='orders' element={<AdminOrders />} />
+              <Route path='reviews' element={<AdminReviews />} />
+              <Route path='reservations' element={<AdminReservations />} />
+            </Route>
           </Routes>
         </CartProvider>
       </AuthProvider>

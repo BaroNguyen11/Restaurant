@@ -187,7 +187,7 @@ const ProductDetails = () => {
                             {/* Nút Add to Cart */}
                             <button
                                 onClick={handleAddToCart}
-                                className="flex-1 bg-[#9e1c20] text-white font-bold rounded-full h-14 px-8 shadow-lg shadow-red-200 hover:bg-[#c83035] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 text-lg cursor-pointer "
+                                className="flex-1 bg-[#9e1c20] text-white font-bold rounded-full h-14 px-8 shadow-lg shadow-red-200 hover:bg-[#c83035] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 text-md md:text-lg cursor-pointer "
                             >
                                 Add To Cart <ShoppingCart size={22} />
                             </button>
@@ -263,14 +263,6 @@ const ProductDetails = () => {
                                 </div>
                             </div>
                         ) : (
-                            // <div className="text-center py-10 animate-fadeIn">
-                            //     <div className="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-4 flex items-center justify-center text-gray-400">
-                            //         <Star size={32} />
-                            //     </div>
-                            //     <h4 className="text-xl font-bold text-gray-900 mb-2">No Reviews Yet</h4>
-                            //     <p className="text-gray-500 mb-6">Be the first to review "{product.name}"</p>
-                            //     <button className="text-[#9e1c20] font-bold border-b-2 border-[#9e1c20] pb-1 hover:text-black hover:border-black transition-all">Write a Review</button>
-                            // </div>
                             <div className="container mx-auto px-4 mt-16 max-w-4xl">
                                 <ProductReviews productId={product.id} />
                             </div>
@@ -296,7 +288,7 @@ const ProductDetails = () => {
 
                                         {/* Badge SALE (Giả lập) */}
                                         {Math.random() > 0.5 && (
-                                            <span className="absolute top-4 left-4 bg-[#F51E46] text-white text-[10px] font-bold px-2 py-1 rounded z-10">SALE</span>
+                                            <span className="absolute top-4 left-4 bg-[#9e1c20] text-white text-[10px] font-bold px-2 py-1 rounded z-10">SALE</span>
                                         )}
 
                                         <div className="h-40 flex items-center justify-center mb-6 bg-[#fff8f0] rounded-2xl group-hover:bg-[#fff5eb] transition-colors relative">
@@ -313,7 +305,7 @@ const ProductDetails = () => {
 
                                         <div className="mt-auto flex items-center justify-between">
                                             <p className="text-[#9e1c20] font-black text-xl">${item.price.toFixed(2)}</p>
-                                            <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                                            <div className="w-8 h-8 rounded-full bg-[#9e1c20] text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
                                                 <ShoppingCart size={14} />
                                             </div>
                                         </div>
