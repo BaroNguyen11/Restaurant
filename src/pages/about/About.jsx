@@ -64,7 +64,7 @@ const chefs = [
 
 const About = () => {
     return (
-        <div className="w-full bg-white font-['Poppins'] overflow-hidden pt-20">
+        <div className="w-full bg-white font-['Poppins'] overflow-hidden ">
 
             {/* ==================== 1. HEADER BANNER ==================== */}
             <section className="relative w-full h-87.5 bg-[#fff8f0] flex items-center justify-center overflow-hidden">

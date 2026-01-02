@@ -35,7 +35,7 @@ const HeroSection = () => {
           initial="hidden"
           animate="visible"
           variants={slideInLeft}
-          className="absolute top-22 left-0 w-50 h-10"
+          className="absolute top-22 left-0 w-30 h-10 lg:w-50"
         >
           <svg width="100%" height="100%" viewBox="0 0 100 20">
             <polyline

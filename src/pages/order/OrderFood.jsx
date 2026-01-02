@@ -28,7 +28,7 @@ const OrderFood = () => {
             setLoading(true);
             try {
                 let { data, error } = await supabase
-                    .from('Products')
+                    .from('products')
                     .select('*');
 
                 if (error) throw error;
@@ -67,7 +67,7 @@ const OrderFood = () => {
     };
 
     return (
-        <div className="w-full bg-[#f9f9f9] font-['Poppins'] pt-20 min-h-screen">
+        <div className="w-full bg-[#f9f9f9] font-['Poppins'] min-h-screen">
             
             {/* --- HEADER BANNER --- */}
             <section className="relative w-full h-62.5 md:h-75 bg-[#fff8f0] flex flex-col items-center justify-center overflow-hidden px-4">
@@ -116,11 +116,10 @@ const OrderFood = () => {
                     <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 min-h-100">
                         <AnimatePresence mode='wait'>
                             {currentItems.length > 0 ? (
-                                // 👇 ĐƯA VÒNG LẶP VÀO ĐÂY ĐỂ FIX LỖI KEY
                                 currentItems.map((item) => (
                                     <motion.div
                                         layout
-                                        key={item.id} // ✅ Key nằm trực tiếp dưới AnimatePresence
+                                        key={item.id} 
                                         initial={{ opacity: 0, scale: 0.9 }}
                                         animate={{ opacity: 1, scale: 1 }}
                                         exit={{ opacity: 0, scale: 0.9 }}
@@ -131,11 +130,11 @@ const OrderFood = () => {
                                         <div className="relative bg-[#fff8f0] rounded-2xl p-4 mb-4 flex items-center justify-center h-48 group-hover:bg-[#fff5eb] transition-colors">
                                             
                                             {/* Link bao quanh ảnh */}
-                                            <Link to={`/product/${item.id}`} className="block w-full h-full items-center justify-center">
+                                            <Link to={`/product/${item.id}`} className="flex w-full h-full items-center justify-center">
                                                 <img 
                                                     src={item.image} 
                                                     alt={item.name} 
-                                                    className="w-36 h-36 object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-md cursor-pointer" 
+                                                    className="w-36 h-36 object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-md cursor-pointer flex items-center justify-center" 
                                                 />
                                             </Link>
                                         </div>
@@ -165,7 +164,7 @@ const OrderFood = () => {
                                                     e.stopPropagation(); // Ngăn click lan ra ngoài link
                                                     addToCart(item);
                                                 }} 
-                                                className="bg-black text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:bg-[#9e1c20] transition-colors active:scale-90 cursor-pointer"
+                                                className="hover:bg-[#c32a2f] text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg bg-[#9e1c20] transition-colors active:scale-90 cursor-pointer"
                                             >
                                                 <ShoppingCart size={18} />
                                             </button>

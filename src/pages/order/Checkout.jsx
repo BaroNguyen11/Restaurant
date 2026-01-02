@@ -5,6 +5,8 @@ import { MapPin, Phone, User, CreditCard, Banknote, CheckCircle, ArrowLeft } fro
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { supabase } from '../../api';
+  import { ToastContainer, toast } from 'react-toastify';
+import PaymentModal from '@/components/PaymentModal';
 
 const Checkout = () => {
     const navigate = useNavigate();
@@ -13,7 +15,7 @@ const Checkout = () => {
 
     const [loading, setLoading] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState('cod'); // 'cod' | 'banking'
-
+    const [isPaymentOpen, setIsPaymentOpen] = useState(false);
     const [formData, setFormData] = useState({
         fullName: '',
         phone: '',
@@ -27,7 +29,6 @@ const Checkout = () => {
             setFormData(prev => ({
                 ...prev,
                 fullName: user.user_metadata?.full_name || '',
-                email: user.email || ''
             }));
         }
     }, [user]);
@@ -42,68 +43,68 @@ const Checkout = () => {
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-
-    const handlePlaceOrder = async (e) => {
-        e.preventDefault();
+    const saveOrderToDatabase = async (method) => {
         setLoading(true);
-
         try {
-            // 1. Tạo đơn hàng trong bảng 'orders'
+            // 1. Tạo đơn hàng
             const { data: orderData, error: orderError } = await supabase
                 .from('orders')
-                .insert([
-                    {
-                        user_id: user ? user.id : null,
-                        full_name: formData.fullName,
-                        phone: formData.phone,
-                        address: formData.address,
-                        payment_method: paymentMethod,
-                        total_amount: cartTotal + 5, // +5$ ship
-                        status: 'pending'
-                    }
-                ])
+                .insert([{
+                    user_id: user ? user.id : null,
+                    full_name: formData.fullName,
+                    phone: formData.phone,
+                    address: formData.address,
+                    payment_method: method, // 'cod' hoặc 'VietQR'
+                    total_amount: cartTotal + 5,
+                    status: method === 'VietQR' ? 'paid' : 'pending', // Nếu QR thì là đã thanh toán
+                    items: cartItems // 👇 QUAN TRỌNG: Lưu JSON món ăn
+                }])
                 .select()
                 .single();
 
             if (orderError) throw orderError;
 
-            // 2. Lưu chi tiết từng món vào 'order_items'
-            if (orderData) {
-                const itemsToInsert = cartItems.map(item => ({
-                    order_id: orderData.id,
-                    product_id: item.id,
-                    product_name: item.name,
-                    quantity: item.quantity,
-                    price: item.salePrice || item.price
-                }));
+            clearCart();
 
-                const { error: itemsError } = await supabase
-                    .from('order_items')
-                    .insert(itemsToInsert);
-
-                if (itemsError) throw itemsError;
-
-                // 3. Thành công: Xóa giỏ hàng & Chuyển trang thông báo
-                clearCart();
-                alert("Order placed successfully! We will contact you soon.");
-               navigate('/order/order_food');
+            if (method === 'cod') {
+              toast.success('Payment successfully!')
             }
+            // Nếu là QR thì alert ở bên trong Modal rồi
+
+            navigate('/order/order_food');
 
         } catch (error) {
             console.error("Error placing order:", error);
             alert("Failed to place order. Please try again.");
         } finally {
             setLoading(false);
+            setIsPaymentOpen(false); // Đóng modal nếu có
+        }
+    };
+    const handlePlaceOrder = (e) => {
+        e.preventDefault();
+
+        if (!formData.fullName || !formData.phone || !formData.address) {
+            alert("Please fill in all shipping details.");
+            return;
+        }
+
+        if (paymentMethod === 'cod') {
+            // Nếu là COD -> Lưu luôn
+            saveOrderToDatabase('cod');
+        } else {
+            // Nếu là Banking -> Mở Modal QR lên
+            setIsPaymentOpen(true);
         }
     };
 
     return (
-        <div className="min-h-screen bg-[#f9f9f9] font-['Poppins'] pt-24 pb-20 ">
+        <div className="min-h-screen bg-[#f9f9f9] font-['Poppins'] pt-4 pb-20 ">
             <div className="container mx-auto px-4">
 
                 {/* Header */}
                 <div className="mb-8 flex items-center gap-4">
-                    <button onClick={() => navigate('/order')} className="p-2 bg-white rounded-full shadow hover:text-[#9e1c20]">
+                    <button onClick={() => navigate('/order/order_food')} className="p-2 bg-white rounded-full shadow hover:text-[#9e1c20]">
                         <ArrowLeft size={20} />
                     </button>
                     <h1 className="text-3xl font-black text-gray-900">Checkout</h1>
@@ -155,8 +156,8 @@ const Checkout = () => {
                                 <CreditCard className="text-[#9e1c20]" /> Payment Method
                             </h3>
                             <div className="space-y-3">
-                                {/* Option 1: COD */}
-                                <label className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${paymentMethod === 'cod' ? 'border-[#9e1c20] bg-red-50' : 'border-gray-100'}`}>
+                                {/* COD */}
+                                <label onClick={() => setPaymentMethod('cod')} className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${paymentMethod === 'cod' ? 'border-[#9e1c20] bg-red-50' : 'border-gray-100'}`}>
                                     <div className="flex items-center gap-3">
                                         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'cod' ? 'border-[#9e1c20]' : 'border-gray-300'}`}>
                                             {paymentMethod === 'cod' && <div className="w-2.5 h-2.5 bg-[#9e1c20] rounded-full" />}
@@ -168,14 +169,14 @@ const Checkout = () => {
                                     <CheckCircle size={20} className={paymentMethod === 'cod' ? 'text-[#9e1c20]' : 'text-gray-200'} />
                                 </label>
 
-                                {/* Option 2: Banking */}
-                                <label className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${paymentMethod === 'banking' ? 'border-[#9e1c20] bg-red-50' : 'border-gray-100'}`}>
+                                {/* Banking */}
+                                <label onClick={() => setPaymentMethod('banking')} className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${paymentMethod === 'banking' ? 'border-[#9e1c20] bg-red-50' : 'border-gray-100'}`}>
                                     <div className="flex items-center gap-3">
                                         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'banking' ? 'border-[#9e1c20]' : 'border-gray-300'}`}>
                                             {paymentMethod === 'banking' && <div className="w-2.5 h-2.5 bg-[#9e1c20] rounded-full" />}
                                         </div>
                                         <div className="flex items-center gap-2 font-bold text-gray-800">
-                                            <CreditCard size={20} /> Credit Card / Banking
+                                            <CreditCard size={20} /> Credit Card / Banking (VietQR)
                                         </div>
                                     </div>
                                     <CheckCircle size={20} className={paymentMethod === 'banking' ? 'text-[#9e1c20]' : 'text-gray-200'} />
@@ -228,7 +229,7 @@ const Checkout = () => {
                             <button
                                 onClick={handlePlaceOrder}
                                 disabled={loading || !formData.phone || !formData.address}
-                                className="w-full bg-[#9e1c20] text-white font-bold py-4 rounded-xl mt-6 hover:bg-black transition-all shadow-lg shadow-red-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                className="w-full bg-[#9e1c20] text-white font-bold py-4 rounded-xl mt-6 hover:bg-[#be282d] transition-all shadow-lg shadow-red-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
                             >
                                 {loading ? <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div> : 'Place Order'}
                             </button>
@@ -239,6 +240,14 @@ const Checkout = () => {
 
                 </div>
             </div>
+            <PaymentModal
+                isOpen={isPaymentOpen}
+                onClose={() => setIsPaymentOpen(false)}
+                totalAmount={(cartTotal + 5) * 25000} // Quy đổi ra VND nếu web đang dùng USD (Ví dụ 1$ = 25k)
+                // Nếu web dùng VND sẵn rồi thì chỉ cần totalAmount={cartTotal + 50000} (tiền ship)
+                shippingInfo={formData}
+            />
+          
         </div>
     );
 };

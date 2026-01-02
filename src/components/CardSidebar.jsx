@@ -27,7 +27,7 @@ const CartSidebar = () => {
                         animate={{ x: 0 }}
                         exit={{ x: '100%' }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="fixed top-0 right-0 h-full w-full md:w-112.5 bg-white z-70 shadow-2xl flex flex-col font-['Poppins']"
+                        className="fixed top-0 right-0 h-full w-full md:w-112.5 bg-white z-9999 shadow-2xl flex flex-col font-['Poppins']"
                     >
                         {/* Header */}
                         <div className="p-6 flex items-center justify-between border-b border-gray-100 bg-[#fff8f0]">
@@ -97,7 +97,7 @@ const CartSidebar = () => {
                                         toggleCart(); // Đóng giỏ hàng nhỏ lại
                                         navigate('/checkout'); // Chuyển sang trang thanh toán
                                     }}
-                                    className="w-full bg-[#9e1c20] text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-red-200 hover:bg-black transition-all active:scale-95"
+                                    className="w-full bg-[#9e1c20] text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-red-200 hover:bg-[#c72c31] transition-all active:scale-95 cursor-pointer"
                                 >
                                     Checkout Now
                                 </button>

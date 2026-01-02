@@ -2,32 +2,43 @@ import React, { useState } from 'react';
 import Navbar from "./Navbar";
 import CartSidebar from "./CardSidebar";
 import { useCart } from '../context/CartContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { LogOut, User } from 'lucide-react';
+import { CreditCard, LogOut, Search, Settings, ShoppingBag, User, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from './ui/dropdown-menu';
+
 const Header = () => {
     const { toggleCart, cartCount, clearCart } = useCart();
     const { user, signOut } = useAuth();
     const [showLogoutModal, setShowLogoutModal] = useState(false);
-
+    const navigate = useNavigate();
     const handleConfirmLogout = () => {
         signOut();
         clearCart();
         setShowLogoutModal(false);
         // Có thể thêm navigate('/') nếu cần
     };
+    const popIn = {
+        hidden: { scale: 0, opacity: 0 },
+        visible: { scale: 1, opacity: 1, transition: { delay: 0.2, type: "", stiffness: 120 } },
+        exit: { opacity: 0 }
+    };
+    const [search, setSearch] = useState(false);
     return (
         <>
             <header className="flex justify-around items-center fixed top-0 left-0 w-full h-20 bg-white shadow-md z-50 px-4 md:px-8 ">
-                <Link to='/'>
+                <Link to='/' className='hidden md:flex'>
                     <div className="flex items-center gap-2">
                         <img src="https://jdtxfefnikvizdpsyjni.supabase.co/storage/v1/object/public/image/logo.png" alt="Logo" className="w-30" />
                     </div>
                 </Link>
                 <Navbar />
                 <div className="flex items-center gap-3">
-                    <button className="hover:text-[#9e1c20] transition-colors cursor-pointer">
+                    <button
+                        className="hover:text-[#9e1c20] transition-colors cursor-pointer"
+                        onClick={() => setSearch(!search)}
+                    >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
                             <path fillRule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clipRule="evenodd" />
                         </svg>
@@ -54,22 +65,52 @@ const Header = () => {
                         {user ? (
                             // Nếu ĐÃ Login -> Hiện Avatar & Nút Logout
                             <div className="flex items-center gap-3">
-                                <div className="text-right hidden md:block">
-                                    <p className="text-sm font-bold text-gray-900 line-clamp-1">{user.user_metadata.full_name}</p>
-                                    <p className="text-xs text-gray-500">Member</p>
-                                </div>
-                                <img
-                                    src={user.user_metadata.avatar_url}
-                                    alt="Avatar"
-                                    className="w-10 h-10 rounded-full border-2 border-[#9e1c20]"
-                                />
-                                <button
-                                    onClick={() => setShowLogoutModal(true)}
-                                    className="p-2 bg-gray-100 rounded-full hover:bg-red-100 hover:text-red-600 transition-colors"
-                                    title="Logout"
-                                >
-                                    <LogOut size={18} />
-                                </button>
+
+                                <DropdownMenu modal={false}>
+                                    <DropdownMenuTrigger asChild>
+                                        <div className='flex items-center gap-3 cursor-pointer'>
+                                            <div className="text-right hidden md:block">
+                                                <p className="text-sm font-bold text-gray-900 line-clamp-1">{user.user_metadata.full_name}</p>
+                                                <p className="text-xs text-gray-500">Member</p>
+                                            </div>
+                                            <img
+                                                src={user.user_metadata.avatar_url}
+                                                alt="Avatar"
+                                                className="w-10 h-10 rounded-full border-2 border-[#9e1c20]"
+                                            />
+                                        </div>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="w-50 p-2 bg-white rounded-xl shadow-xl border border-gray-100 font-['Poppins']" align="end">
+
+                                        <DropdownMenuItem
+                                            className="cursor-pointer rounded-lg p-2 hover:bg-gray-50 focus:bg-gray-50"
+                                            onClick={() => { navigate('profile', { state: { activeTab: 'profile' } }) }}
+                                        >
+                                            <User className="mr-2 h-4 w-4 text-gray-500" />
+                                            <span>Profile</span>
+                                        </DropdownMenuItem>
+
+                                        <DropdownMenuItem
+                                            className="cursor-pointer rounded-lg p-2 hover:bg-gray-50 focus:bg-gray-50"
+                                            onClick={() => { navigate('profile', { state: { activeTab: 'orders' } }) }}
+                                        >
+                                            <CreditCard className="mr-2 h-4 w-4 text-gray-500" />
+                                            <span>My orders</span>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem
+                                            className="cursor-pointer rounded-lg p-2 hover:bg-gray-50 focus:bg-gray-50"
+                                            onClick={() => { navigate('profile', { state: { activeTab: 'settings' } }) }}
+                                        >
+                                            <Settings className="mr-2 h-4 w-4 text-gray-500" />
+                                            <span>Settings</span>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem onClick={() => setShowLogoutModal(true)} className='hover:bg-red-50! cursor-pointer' >
+                                            <LogOut size={18} className="mr-2 h-4 w-4 text-red-600" />
+                                            <span className='text-red-600'> Log out </span>
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </div>
                         ) : (
                             <Link to="/signin">
@@ -123,13 +164,13 @@ const Header = () => {
                             <div className="flex gap-3">
                                 <button
                                     onClick={() => setShowLogoutModal(false)}
-                                    className="flex-1 py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
+                                    className="flex-1 py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleConfirmLogout}
-                                    className="flex-1 py-3 rounded-xl font-bold text-white bg-[#9e1c20] hover:bg-black transition-colors shadow-lg shadow-red-200"
+                                    className="flex-1 py-3 rounded-xl font-bold text-white bg-[#9e1c20] hover:bg-[#bb292e] transition-colors shadow-lg shadow-red-200 cursor-pointer"
                                 >
                                     Yes, Logout
                                 </button>
@@ -139,6 +180,46 @@ const Header = () => {
                     </div>
                 )}
             </AnimatePresence>
+
+            {search &&
+                <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    variants={popIn}
+                    className="fixed inset-0 bg-black/80 z-99999 flex flex-col items-center justify-center backdrop-blur-sm p-4"
+                >
+                    {/* Nút đóng (Góc phải) */}
+                    <button
+                        onClick={() => setSearch(false)}
+                        className="absolute top-8 right-8 text-white hover:text-[#9e1c20]  cursor-pointer hover:rotate-90 transition-all"
+                    >
+                        <X size={40} />
+                    </button>
+
+                    {/* Form Tìm kiếm */}
+                    <motion.div
+                        initial={{ y: -50, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        className="w-full max-w-3xl relative"
+                    >
+                        <input
+                            type="text"
+                            placeholder="Type to search..."
+                            className="w-full bg-transparent border-b-2 border-gray-500 text-white text-3xl py-4 pr-12 focus:outline-none focus:border-[#9e1c20] transition-colors placeholder:text-gray-600"
+                            autoFocus 
+                        />
+                        <button className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white cursor-pointer">
+                            <Search size={30} />
+                        </button>
+                    </motion.div>
+
+                    <div
+                        className="absolute inset-0 -z-10"
+                        onClick={() => setSearch(false)}
+                    ></div>
+                </motion.div>
+            }
         </>
     )
 }

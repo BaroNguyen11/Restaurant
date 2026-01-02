@@ -46,7 +46,7 @@ const Contact = () => {
         }
     };
     return (
-        <div className="w-full bg-white font-['Poppins'] overflow-hidden pt-20">
+        <div className="w-full bg-white font-['Poppins'] overflow-hidden ">
 
             {/* ==================== 1. HEADER BANNER (SKETCHES) ==================== */}
             <section className="relative w-full h-75 md:h-100 bg-[#fff8f0] flex items-center justify-center overflow-hidden">
@@ -116,7 +116,7 @@ const Contact = () => {
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-gray-900 text-lg">Address</h4>
-                                    <p className="text-gray-500 text-sm">8502 Preston Rd. Inglewood, Maine 98380</p>
+                                    <p className="text-gray-500 text-sm">120 Yên Lãng</p>
                                 </div>
                             </div>
 
@@ -127,8 +127,8 @@ const Contact = () => {
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-gray-900 text-lg">Contact Info</h4>
-                                    <p className="text-gray-500 text-sm">Mobile: +123 456 7890</p>
-                                    <p className="text-gray-500 text-sm">Email: hello@tastenest.com</p>
+                                    <p className="text-gray-500 text-sm">Mobile: 0123 456 789</p>
+                                    <p className="text-gray-500 text-sm">Email: bao927471@gmail.com</p>
                                 </div>
                             </div>
 
@@ -247,8 +247,8 @@ const Contact = () => {
                             <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-6 uppercase relative z-10">Visit Our Restaurant</h2>
 
                             <div className="bg-white/50 backdrop-blur-sm p-6 rounded-2xl w-full max-w-sm relative z-10 border border-white/60">
-                                <p className="text-gray-600 font-medium mb-1">213 W Tomichi Ave, Gunnison, CO</p>
-                                <p className="text-gray-500 text-sm mb-6">81230, United States</p>
+                                <p className="text-gray-600 font-medium mb-1">120 Phố Yên Lãng</p>
+                                <p className="text-gray-500 text-sm mb-6">36</p>
                                 <div className="w-10 h-1 bg-[#FFA500] mx-auto mb-6 rounded-full"></div>
                                 <p className="text-gray-600 text-sm">Monday - Saturday: 9:00am - 10:00pm</p>
                                 <p className="text-gray-600 text-sm">Sunday: Is the holiday</p>

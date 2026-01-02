@@ -109,7 +109,7 @@ const OrderTable = () => {
     };
 
     return (
-        <div className="w-full bg-white font-['Poppins'] pt-24 pb-20">
+        <div className="w-full bg-white font-['Poppins'] pb-20">
             {/* ... (Phần Header Banner giữ nguyên) ... */}
             <section className="relative w-full h-75 bg-[#fff8f0] flex flex-col items-center justify-center overflow-hidden px-4 mb-16">
                 <motion.img animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} src="https://cdn-icons-png.flaticon.com/512/3595/3595455.png" className="absolute top-10 left-10 w-24 opacity-20 grayscale" alt="pizza" />

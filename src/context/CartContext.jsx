@@ -18,7 +18,7 @@ export const CartProvider = ({ children }) => {
                 // A. NẾU ĐÃ LOGIN: Lấy từ Supabase
                 const { data, error } = await supabase
                     .from('cart_items')
-                    .select('*, product:Products(*)')
+                    .select('*, product:products(*)')
                     .eq('user_id', user.id);
 
                 if (data) {

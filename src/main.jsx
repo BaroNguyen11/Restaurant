@@ -18,6 +18,7 @@ import NotFound from './pages/NotFound'
 import ScrollToTop from './pages/ScrollToTop'
 import ModalLogin from './components/ModalLogin'
 import Chatbot from './components/ChatBot'
+import Profile from './pages/profile/Profile'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -37,10 +38,10 @@ createRoot(document.getElementById('root')).render(
               <Route path="/product/:id" element={<ProductDetails />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/profile" element={<Profile/>}/>
               <Route path="*" element={<NotFound />} />
             </Route>
             <Route path="/signin" element={<Signin />} />
-
           </Routes>
         </CartProvider>
       </AuthProvider>

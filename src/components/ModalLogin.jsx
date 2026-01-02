@@ -60,7 +60,7 @@ const ModalLogin = () => {
             <div className="flex flex-col gap-3">
               <button
                 onClick={handleLogin}
-                className="w-full py-3.5 rounded-xl font-bold text-white bg-[#9e1c20] hover:bg-black transition-colors shadow-lg shadow-red-200 flex items-center justify-center gap-2"
+                className="w-full py-3.5 rounded-xl font-bold text-white bg-[#9e1c20] hover:bg-black transition-colors shadow-lg shadow-red-200 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <LogIn size={18} />
                 Go to Sign In
@@ -68,7 +68,7 @@ const ModalLogin = () => {
               
               <button
                 onClick={() => setShowLoginModal(false)}
-                className="w-full py-3.5 rounded-xl font-bold text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition-colors"
+                className="w-full py-3.5 rounded-xl font-bold text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition-colors cursor-pointer"
               >
                 Cancel, I'll browse first
               </button>
