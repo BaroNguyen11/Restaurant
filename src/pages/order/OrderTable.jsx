@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Phone, Mail, User, CheckCircle, AlertCircle } from 'lucide-react';
 import { supabase } from '../../api';
+import {toast} from 'react-toastify'
 
 const OrderTable = () => {
     // State quản lý dữ liệu Form
@@ -16,7 +17,7 @@ const OrderTable = () => {
     });
 
     const [loading, setLoading] = useState(false);
-    const [status, setStatus] = useState(null); 
+    const [status, setStatus] = useState(null);
     const [errors, setErrors] = useState({}); // <--- 1. State lưu lỗi
 
     // Xử lý thay đổi input (khi gõ thì xóa lỗi cũ đi)
@@ -27,12 +28,20 @@ const OrderTable = () => {
             setErrors({ ...errors, [e.target.name]: null });
         }
     };
+    useEffect(() => {
+        if (status === 'success') {
+            toast.success('Your reservation has been sent!');
+        }
 
+        if (status === 'error') {
+            toast.error('Something went wrong!');
+        }
+    }, [status]);
     // --- 2. HÀM VALIDATE ---
     const validateForm = () => {
         const newErrors = {};
         const today = new Date();
-        
+
         // 1. Validate Phone (Số VN: 10 số, bắt đầu bằng 03, 05, 07, 08, 09)
         const phoneRegex = /^(0[3|5|7|8|9])[0-9]{8}$/;
         if (!formData.phone) {
@@ -52,7 +61,7 @@ const OrderTable = () => {
         if (formData.date && formData.time) {
             // Tạo đối tượng Date từ dữ liệu nhập vào
             const bookingDateTime = new Date(`${formData.date}T${formData.time}`);
-            
+
             if (bookingDateTime < today) {
                 newErrors.dateTime = "Thời gian đặt bàn không được ở quá khứ";
             }
@@ -72,7 +81,7 @@ const OrderTable = () => {
     // Xử lý gửi Form
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         // Chạy validate trước khi gửi
         if (!validateForm()) {
             return; // Dừng lại nếu có lỗi
@@ -85,20 +94,20 @@ const OrderTable = () => {
             const { error } = await supabase
                 .from('reservations')
                 .insert([{
-                        name: formData.name,
-                        phone: formData.phone,
-                        email: formData.email,
-                        date: formData.date,
-                        time: formData.time,
-                        guests: formData.guests,
-                        message: formData.message,
-                        status: 'pending'
-                    }]);
+                    name: formData.name,
+                    phone: formData.phone,
+                    email: formData.email,
+                    date: formData.date,
+                    time: formData.time,
+                    guests: formData.guests,
+                    message: formData.message,
+                    status: 'pending'
+                }]);
 
             if (error) throw error;
 
             setStatus('success');
-            setFormData({ name: '', phone: '', email: '', date: '', time: '', guests: 2, message: '' }); 
+            setFormData({ name: '', phone: '', email: '', date: '', time: '', guests: 2, message: '' });
 
         } catch (error) {
             console.error('Error booking:', error);
@@ -144,14 +153,14 @@ const OrderTable = () => {
                                 <div className="relative">
                                     <label className="text-sm font-bold text-gray-700 mb-1 block">Phone Number *</label>
                                     <div className="relative">
-                                        <input 
-                                            required 
-                                            name="phone" 
-                                            value={formData.phone} 
-                                            onChange={handleChange} 
-                                            type="tel" 
-                                            placeholder="0912 345 678" 
-                                            className={`w-full bg-gray-50 py-3 pl-10 pr-4 rounded-xl border ${errors.phone ? 'border-red-500 bg-red-50' : 'border-gray-200'} focus:outline-none focus:border-[#9e1c20] focus:ring-1 focus:ring-[#9e1c20] transition-all`} 
+                                        <input
+                                            required
+                                            name="phone"
+                                            value={formData.phone}
+                                            onChange={handleChange}
+                                            type="tel"
+                                            placeholder="0912 345 678"
+                                            className={`w-full bg-gray-50 py-3 pl-10 pr-4 rounded-xl border ${errors.phone ? 'border-red-500 bg-red-50' : 'border-gray-200'} focus:outline-none focus:border-[#9e1c20] focus:ring-1 focus:ring-[#9e1c20] transition-all`}
                                         />
                                         <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                                     </div>
@@ -185,12 +194,12 @@ const OrderTable = () => {
                                 <div className="relative">
                                     <label className="text-sm font-bold text-gray-700 mb-1 block">Date *</label>
                                     <div className="relative">
-                                        <input 
-                                            required 
-                                            name="date" 
-                                            value={formData.date} 
-                                            onChange={handleChange} 
-                                            type="date" 
+                                        <input
+                                            required
+                                            name="date"
+                                            value={formData.date}
+                                            onChange={handleChange}
+                                            type="date"
                                             className={`w-full bg-gray-50 py-3 pl-10 pr-4 rounded-xl border ${errors.dateTime || errors.date ? 'border-red-500 bg-red-50' : 'border-gray-200'} focus:outline-none focus:border-[#9e1c20] transition-all cursor-pointer`}
                                         />
                                         <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
@@ -201,19 +210,19 @@ const OrderTable = () => {
                                 <div className="relative">
                                     <label className="text-sm font-bold text-gray-700 mb-1 block">Time *</label>
                                     <div className="relative">
-                                        <input 
-                                            required 
-                                            name="time" 
-                                            value={formData.time} 
-                                            onChange={handleChange} 
-                                            type="time" 
+                                        <input
+                                            required
+                                            name="time"
+                                            value={formData.time}
+                                            onChange={handleChange}
+                                            type="time"
                                             className={`w-full bg-gray-50 py-3 pl-10 pr-4 rounded-xl border ${errors.dateTime || errors.time ? 'border-red-500 bg-red-50' : 'border-gray-200'} focus:outline-none focus:border-[#9e1c20] transition-all cursor-pointer`}
                                         />
                                         <Clock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                                     </div>
                                 </div>
                             </div>
-                            
+
                             {/* Thông báo lỗi chung cho ngày giờ nếu chọn quá khứ */}
                             {errors.dateTime && <p className="text-red-500 text-sm bg-red-50 p-2 rounded border border-red-100 text-center">{errors.dateTime}</p>}
 
@@ -231,19 +240,7 @@ const OrderTable = () => {
                                 {loading ? 'Processing...' : 'Book A Table Now'}
                             </button>
 
-                            {/* Feedback Message */}
-                            {status === 'success' && (
-                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-4 bg-green-50 text-green-700 rounded-xl flex items-center gap-2 border border-green-200">
-                                    <CheckCircle size={20} />
-                                    <span><strong>Success!</strong> Your reservation has been sent.</span>
-                                </motion.div>
-                            )}
-                            {status === 'error' && (
-                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-4 bg-red-50 text-red-700 rounded-xl flex items-center gap-2 border border-red-200">
-                                    <AlertCircle size={20} />
-                                    <span><strong>Error!</strong> Something went wrong.</span>
-                                </motion.div>
-                            )}
+                           
                         </form>
                     </div>
 

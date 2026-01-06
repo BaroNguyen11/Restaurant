@@ -269,15 +269,16 @@ const Contact = () => {
                         {/* --- GOOGLE MAP (BÊN PHẢI) --- */}
                         <div className="lg:col-span-7 h-100 lg:h-auto bg-gray-200">
                             <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.4946681007846!2d106.69950787480477!3d10.77337428937517!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f40a3b46163%3A0x142c653d97c09e90!2sBen%20Thanh%20Market!5e0!3m2!1sen!2s!4v1709221834212!5m2!1sen!2s"
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.956398082469!2d106.6842704748056!3d10.822158889329419!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174deb3ef536f31%3A0x8b7bb8b7c956157b!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBDw7RuZyBuZ2hp4buHcCBUUC5IQ00!5e1!3m2!1svi!2s!4v1767420969213!5m2!1svi!2s"
                                 width="100%"
                                 height="100%"
                                 style={{ border: 0 }}
-                                allowFullScreen=""
+                                allowfullscreen=""
                                 loading="lazy"
-                                referrerPolicy="no-referrer-when-downgrade"
+                                referrerpolicy="no-referrer-when-downgrade"
                                 className="filter grayscale-20 contrast-125"
-                            ></iframe>
+                            >
+                            </iframe>
                         </div>
 
                     </div>

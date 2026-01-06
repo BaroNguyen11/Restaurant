@@ -55,7 +55,7 @@ const Checkout = () => {
                     phone: formData.phone,
                     address: formData.address,
                     payment_method: method, // 'cod' hoặc 'VietQR'
-                    total_amount: cartTotal + 5,
+                    total_amount: cartTotal + 0.5,
                     status: method === 'VietQR' ? 'paid' : 'pending', // Nếu QR thì là đã thanh toán
                     items: cartItems // 👇 QUAN TRỌNG: Lưu JSON món ăn
                 }])
@@ -221,7 +221,7 @@ const Checkout = () => {
                                 </div>
                                 <div className="flex justify-between items-center pt-4 border-t border-gray-100 mt-2">
                                     <span className="text-lg font-bold text-gray-800">Total</span>
-                                    <span className="text-2xl font-black text-[#9e1c20]">${(cartTotal + 5).toFixed(2)}</span>
+                                    <span className="text-2xl font-black text-[#9e1c20]">${(cartTotal + 0.5).toFixed(2)}</span>
                                 </div>
                             </div>
 
@@ -243,7 +243,7 @@ const Checkout = () => {
             <PaymentModal
                 isOpen={isPaymentOpen}
                 onClose={() => setIsPaymentOpen(false)}
-                totalAmount={(cartTotal + 5) * 25000} // Quy đổi ra VND nếu web đang dùng USD (Ví dụ 1$ = 25k)
+                totalAmount={(cartTotal + 0.5) * 25000} // Quy đổi ra VND nếu web đang dùng USD (Ví dụ 1$ = 25k)
                 // Nếu web dùng VND sẵn rồi thì chỉ cần totalAmount={cartTotal + 50000} (tiền ship)
                 shippingInfo={formData}
             />
