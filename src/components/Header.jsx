@@ -84,7 +84,7 @@ const Header = () => {
 
                                         <DropdownMenuItem
                                             className="cursor-pointer rounded-lg p-2 hover:bg-gray-50 focus:bg-gray-50"
-                                            onClick={() => { navigate('profile', { state: { activeTab: 'profile' } }) }}
+                                            onClick={() => { navigate('infomation', { state: { activeTab: 'profile' } }) }}
                                         >
                                             <User className="mr-2 h-4 w-4 text-gray-500" />
                                             <span>Profile</span>
@@ -92,14 +92,14 @@ const Header = () => {
 
                                         <DropdownMenuItem
                                             className="cursor-pointer rounded-lg p-2 hover:bg-gray-50 focus:bg-gray-50"
-                                            onClick={() => { navigate('profile', { state: { activeTab: 'orders' } }) }}
+                                            onClick={() => { navigate('my_order', { state: { activeTab: 'orders' } }) }}
                                         >
                                             <CreditCard className="mr-2 h-4 w-4 text-gray-500" />
                                             <span>My orders</span>
                                         </DropdownMenuItem>
                                         <DropdownMenuItem
                                             className="cursor-pointer rounded-lg p-2 hover:bg-gray-50 focus:bg-gray-50"
-                                            onClick={() => { navigate('profile', { state: { activeTab: 'settings' } }) }}
+                                            onClick={() => { navigate('settings', { state: { activeTab: 'settings' } }) }}
                                         >
                                             <Settings className="mr-2 h-4 w-4 text-gray-500" />
                                             <span>Settings</span>

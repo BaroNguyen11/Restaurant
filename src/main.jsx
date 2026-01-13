@@ -19,6 +19,9 @@ import ScrollToTop from './pages/ScrollToTop'
 import ModalLogin from './components/ModalLogin'
 import Chatbot from './components/ChatBot'
 import Profile from './pages/profile/Profile'
+import Info from './pages/profile/Info'
+import MyOrder from './pages/profile/MyOrder'
+import Settings from './pages/profile/Settings'
 import DashBoard from './admin/DashBoard'
 import Admin from './admin/Admin'
 import AdminProducts from './admin/AdminProducts'
@@ -44,7 +47,11 @@ createRoot(document.getElementById('root')).render(
               <Route path="/product/:id" element={<ProductDetails />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/" element={<Profile />}>
+                <Route path='/infomation' element={<Info/>}/>
+                <Route path='/my_order' element={<MyOrder/>}/>
+                <Route path='/settings' element={<Settings/>}/>
+              </Route>
               <Route path="*" element={<NotFound />} />
             </Route>
             <Route path="/signin" element={<Signin />} />
