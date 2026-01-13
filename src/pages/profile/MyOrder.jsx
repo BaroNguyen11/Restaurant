@@ -1,6 +1,6 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Package, Calendar, ChevronRight, ChevronLeft, Truck, CheckCircle, Clock, MapPin, XCircle, X } from 'lucide-react'
+import { Package, Calendar, ChevronRight, ChevronLeft, Truck, CheckCircle, Clock, MapPin, XCircle, X, Eye } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { useState, useEffect } from 'react'
 import { useAuth } from '../../context/AuthContext';
@@ -8,6 +8,7 @@ import ReactPaginate from 'react-paginate'
 import { supabase } from '../../api';
 import { useLocation, useNavigate } from 'react-router-dom';
 import OrderTrackingModal from './OrderTrackingModal';
+import OrderDetailModal from './OrderDetailModal';
 
 
 
@@ -20,7 +21,7 @@ const MyOrder = () => {
     const [orders, setOrders] = useState([]);
     const [itemOffset, setItemOffset] = useState(0);
     const itemsPerPage = 5;
-
+    const [selectedOrder, setSelectedOrder] = useState(null);
     // State để mở modal tracking
     const [trackingOrder, setTrackingOrder] = useState(null);
 
@@ -35,7 +36,24 @@ const MyOrder = () => {
         setItemOffset(newOffset);
         window.scrollTo({ top: 200, behavior: 'smooth' });
     };
+    const handleBuyAgain = (order) => {
+        const itemsToCheckout = order.items.map(item => ({
+            id: item.product_id || item.id, // Lấy ID sản phẩm
+            name: item.name || item.product_name, // Lấy tên
+            price: Number(item.price),
+            quantity: item.quantity,
+            image: item.image,
+            // Tính lại tổng tiền của item đó (nếu cần)
+            totalPrice: Number(item.price) * item.quantity
+        }));
 
+        navigate('/checkout', {
+            state: {
+                directCheckoutItems: itemsToCheckout,
+                isBuyAgain: true // Cờ đánh dấu để biết đây là mua lại
+            }
+        });
+    };
     useEffect(() => {
         if (user) {
             fetchOrders();
@@ -120,7 +138,7 @@ const MyOrder = () => {
 
                                     {/* Items List */}
                                     <div className="space-y-2 mb-4">
-                                        {order.items && order.items.map((item, idx) => (
+                                        {order.items && order.items.slice(0, 2).map((item, idx) => (
                                             <div key={idx} className="flex justify-between items-center text-sm">
                                                 <div className="flex items-center gap-2 text-gray-700">
                                                     <span className="font-bold text-gray-400">{item.quantity}x</span>
@@ -131,22 +149,42 @@ const MyOrder = () => {
                                                 </span>
                                             </div>
                                         ))}
+                                        {order.items && order.items.length > 2 && (
+                                            <div className="pt-2">
+                                                <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded-md">
+                                                    + {order.items.length - 2} more items
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* Footer Card with Action Button */}
                                     <div className="pt-4 border-t border-gray-50 flex justify-end gap-3">
+                                        {/* Nút Xem Chi Tiết (Mới) */}
+                                        <button
+                                            onClick={() => setSelectedOrder(order)}
+                                            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-bold cursor-pointer"
+                                        >
+                                            <Eye size={16} /> Details
+                                        </button>
+
                                         {/* Nút Track Order */}
                                         <button
                                             onClick={() => setTrackingOrder(order)}
-                                            className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors text-sm font-bold"
+                                            className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors text-sm font-bold cursor-pointer"
                                         >
-                                            <Truck size={16} /> Track Order
+                                            <Truck size={16} /> Track
                                         </button>
 
-                                        {/* Nút Mua lại (Ví dụ) */}
-                                        <button className="px-4 py-2 bg-[#9e1c20] text-white rounded-lg hover:bg-black transition-colors text-sm font-bold">
-                                            Buy Again
-                                        </button>
+                                        {/* Nút Mua lại */}
+                                        {order.status === 'completed' ?
+                                            <button
+                                                className="px-4 py-2 bg-[#9e1c20] text-white rounded-lg hover:bg-[#bd2d32] transition-colors text-sm font-bold cursor-pointer"
+                                                onClick={() => handleBuyAgain(order)}
+                                            >
+                                                Buy Again
+                                            </button> : ''
+                                        }
                                     </div>
                                 </div>
                             ))}
@@ -189,6 +227,14 @@ const MyOrder = () => {
                     <OrderTrackingModal
                         order={trackingOrder}
                         onClose={() => setTrackingOrder(null)}
+                    />
+                )}
+            </AnimatePresence>
+            <AnimatePresence>
+                {selectedOrder && (
+                    <OrderDetailModal
+                        order={selectedOrder}
+                        onClose={() => setSelectedOrder(null)}
                     />
                 )}
             </AnimatePresence>
