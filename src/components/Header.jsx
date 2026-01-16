@@ -1,18 +1,44 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from "./Navbar";
 import CartSidebar from "./CardSidebar";
 import { useCart } from '../context/CartContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { CreditCard, LogOut, Search, Settings, ShoppingBag, User, X } from 'lucide-react';
+import { CreditCard, Crown, LogOut, Search, Settings, ShoppingBag, User, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from './ui/dropdown-menu';
+import { supabase } from '@/api';
 
 const Header = () => {
     const { toggleCart, cartCount, clearCart } = useCart();
     const { user, signOut } = useAuth();
     const [showLogoutModal, setShowLogoutModal] = useState(false);
+    const [role, setRole] = useState('user');
     const navigate = useNavigate();
+
+    useEffect(() => {
+        // 1. Khai báo hàm async bên trong
+        const getRole = async () => {
+            if (!user) return; // Kiểm tra nếu chưa có user thì thôi
+
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', user.id)
+                .single();
+
+            if (data) {
+                setRole(data.role);
+            }
+            if (error) {
+                console.error('Lỗi lấy role:', error);
+            }
+        };
+
+        // 2. Gọi hàm đó ngay lập tức
+        getRole();
+
+    }, [user]);
     const handleConfirmLogout = () => {
         signOut();
         clearCart();
@@ -82,6 +108,20 @@ const Header = () => {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="w-50 p-2 bg-white rounded-xl shadow-xl border border-gray-100 font-['Poppins']" align="end">
 
+                                        {role === 'admin' ?
+                                           <>
+                                            <DropdownMenuItem
+                                                className="cursor-pointer rounded-lg p-2 hover:bg-gray-50 focus:bg-gray-50"
+                                                onClick={() => { navigate('/admin', { state: { activeTab: 'profile' } }) }}
+                                            >
+                                                <Crown className="mr-2 h-4 w-4 text-gray-800" />
+                                                <span className='font-bold'>Dashboard</span>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuSeparator/>
+                                            </>
+                                            :
+                                            ''
+                                        }
                                         <DropdownMenuItem
                                             className="cursor-pointer rounded-lg p-2 hover:bg-gray-50 focus:bg-gray-50"
                                             onClick={() => { navigate('infomation', { state: { activeTab: 'profile' } }) }}
@@ -207,7 +247,7 @@ const Header = () => {
                             type="text"
                             placeholder="Type to search..."
                             className="w-full bg-transparent border-b-2 border-gray-500 text-white text-3xl py-4 pr-12 focus:outline-none focus:border-[#9e1c20] transition-colors placeholder:text-gray-600"
-                            autoFocus 
+                            autoFocus
                         />
                         <button className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white cursor-pointer">
                             <Search size={30} />

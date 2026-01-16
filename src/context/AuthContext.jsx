@@ -10,11 +10,13 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [role, setRole] = useState('user');
 
     useEffect(() => {
         // 1. Kiểm tra session hiện tại khi load trang
         const checkSession = async () => {
             const { data: { session } } = await supabase.auth.getSession();
+            
             setUser(session?.user ?? null);
             setLoading(false);
         };
@@ -22,7 +24,7 @@ export const AuthProvider = ({ children }) => {
         checkSession();
 
         // 2. Lắng nghe sự thay đổi (Login/Logout)
-        const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+        const { data: listener } = supabase.auth.onAuthStateChange(async (_event, session) => {
             setUser(session?.user ?? null);
             setLoading(false);
         });
@@ -38,7 +40,7 @@ export const AuthProvider = ({ children }) => {
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                   redirectTo: window.location.origin
+                    redirectTo: window.location.origin
                 }
             });
             if (error) throw error;
@@ -57,12 +59,12 @@ export const AuthProvider = ({ children }) => {
         return { data, error };
     };
     const loginWithEmail = async (email, password) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    return { data, error };
-  };
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+        return { data, error };
+    };
     // Hàm Logout
     const signOut = async () => {
         const { error } = await supabase.auth.signOut();

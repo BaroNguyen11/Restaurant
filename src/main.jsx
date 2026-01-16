@@ -28,6 +28,8 @@ import AdminProducts from './admin/AdminProducts'
 import AdminOrders from './admin/AdminOrders'
 import AdminReviews from './admin/AdminReviews'
 import AdminReservations from './admin/AdminReservations'
+import ManageUser from './admin/ManageUser'
+// import AdminRoute from './routes/AdminRoute'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -55,13 +57,16 @@ createRoot(document.getElementById('root')).render(
               <Route path="*" element={<NotFound />} />
             </Route>
             <Route path="/signin" element={<Signin />} />
-            <Route path='/admin' element={<Admin />}>
+           {/* <Route element={<AdminRoute/>}> */}
+             <Route path='/admin' element={<Admin />}>
               <Route index element={<DashBoard />} />
               <Route path='products' element={<AdminProducts />} />
               <Route path='orders' element={<AdminOrders />} />
               <Route path='reviews' element={<AdminReviews />} />
               <Route path='reservations' element={<AdminReservations />} />
-            </Route>
+              <Route path='users' element={<ManageUser />} />
+            {/* </Route> */}
+           </Route>
           </Routes>
         </CartProvider>
       </AuthProvider>
