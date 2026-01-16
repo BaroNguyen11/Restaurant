@@ -1,9 +1,10 @@
 
 import { motion } from 'framer-motion';
-import { User, Phone, Mail, MapPin, Save } from 'lucide-react'
+import { User, Phone, Mail, MapPin, Save, Loader2 } from 'lucide-react'
 import { toast } from 'react-toastify'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext';
+import { supabase } from '@/api';
 const Info = () => {
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
@@ -12,16 +13,56 @@ const Info = () => {
         phone: '',
         address: ''
     });
+    useEffect(() => {
+        const getProfile = async () => {
+            if (!user) return;
+
+            try {
+                const { data, error } = await supabase
+                    .from('profiles') // 👇 Nhớ dùng số nhiều
+                    .select('*')
+                    .eq('id', user.id)
+                    .single();
+
+                if (data) {
+                    setFormData({
+                        fullName: data.full_name || '',
+                        phone: data.phone || '',
+                        address: data.address || ''
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching profile:", error);
+            }
+        };
+
+        getProfile();
+    }, [user]);
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
         setLoading(true);
-        const { error } = await supabase.auth.updateUser({
-            data: { full_name: formData.fullName, phone: formData.phone, address: formData.address }
-        });
-        if (error) toast.error(error.message);
-        else toast.success("Profile updated!");
-        setLoading(false);
-    };
+
+        try {
+            const { error } = await supabase
+                .from('profiles') // 👇 Update thẳng vào bảng này
+                .update({
+                    full_name: formData.fullName,
+                    phone: formData.phone,
+                    address: formData.address,
+                    // updated_at: new Date() // Nếu bảng có cột này thì thêm vào
+                })
+                .eq('id', user.id);
+
+            if (error) throw error;
+
+            toast.success("Profile updated successfully!");
+
+        } catch (error) {
+            toast.error("Error updating profile: " + error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
     return (
         <>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex-1 mt-4">
@@ -51,7 +92,6 @@ const Info = () => {
                                     type="tel"
                                     value={formData.phone}
                                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                    placeholder="Add your phone"
                                     className="w-full pl-11 pr-4 py-3 bg-gray-50 rounded-xl border-none focus:ring-2 focus:ring-[#9e1c20] outline-none transition-all"
                                 />
                             </div>

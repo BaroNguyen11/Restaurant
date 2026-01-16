@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '../api'; // Import client đã cấu hình
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
+    const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -64,6 +66,7 @@ export const AuthProvider = ({ children }) => {
     // Hàm Logout
     const signOut = async () => {
         const { error } = await supabase.auth.signOut();
+        navigate('/')
         if (error) console.error("Logout failed:", error.message);
     };
 
