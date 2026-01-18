@@ -2,7 +2,7 @@
 export async function askClaude(prompt) {
   try {
     // ⚙️ Đặt URL Worker của bạn tại đây
-    const WORKER_URL = "https://claude-proxy.bao927471.workers.dev/";
+    const WORKER_URL = "https://restaurant.bao927471.workers.dev/";
 
     const response = await fetch(WORKER_URL, {
       method: "POST",
