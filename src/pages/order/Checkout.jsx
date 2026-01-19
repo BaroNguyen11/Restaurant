@@ -295,7 +295,7 @@ const Checkout = () => {
     };
 
     const finalSubtotal = calculateSubtotal();
-    const deliveryFee = 5.0; // Fixed delivery fee
+    const deliveryFee = 0.0; 
     const finalTotal = finalSubtotal + deliveryFee;
     // ------------------------------------------
 
@@ -309,11 +309,11 @@ const Checkout = () => {
     }, [user]);
 
     // Redirect if NO items to checkout (neither in cart nor direct buy)
-    useEffect(() => {
-        if (finalCheckoutItems.length === 0) {
-            navigate('/order/order_food');
-        }
-    }, [finalCheckoutItems, navigate]);
+    // useEffect(() => {
+    //     if (finalCheckoutItems.length === 0) {
+    //         navigate('/order/order_food');
+    //     }
+    // }, [finalCheckoutItems, navigate]);
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -347,7 +347,7 @@ const Checkout = () => {
                 toast.success('Order placed successfully!');
             }
             
-            navigate('/order/my_order'); // Redirect to order history
+            navigate('/my_order'); // Redirect to order history
 
         } catch (error) {
             console.error("Error placing order:", error);
