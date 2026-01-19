@@ -15,7 +15,7 @@ const detailedFeatures = [
             "Locally Sourced Meats",
             "Daily Fresh Shipments"
         ],
-        img: "https://img.freepik.com/free-photo/fresh-vegetables-wooden-table_1150-13783.jpg", // Ảnh rau củ tươi
+        img: "https://png.pngtree.com/png-clipart/20250520/original/pngtree-fresh-vegetables-with-colorful-healthy-produce-png-image_21037605.png", // Ảnh rau củ tươi
         icon: Leaf,
         color: "text-green-600",
         bgColor: "bg-green-100"
@@ -31,7 +31,7 @@ const detailedFeatures = [
             "Free Delivery for Orders > $50",
             "Contactless Delivery Options"
         ],
-        img: "https://img.freepik.com/free-photo/delivery-man-riding-red-scooter-illustration_1150-5915.jpg", // Ảnh giao hàng (hoặc scooter 3D)
+        img: "https://png.pngtree.com/png-vector/20240205/ourmid/pngtree-delivery-worker-in-motorcycle-png-image_11545048.png", // Ảnh giao hàng (hoặc scooter 3D)
         icon: Truck,
         color: "text-orange-600",
         bgColor: "bg-orange-100"
@@ -142,12 +142,13 @@ const About = () => {
                                     className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-12 lg:gap-20`}
                                 >
                                     {/* --- CỘT ẢNH --- */}
-                                    <div className="w-full lg:w-1/2 relative">
-                                        <div className="relative rounded-[40px] overflow-hidden shadow-2xl group">
+                                    <div className="w-full lg:w-1/2 relative flex justify-center">
+                                       <div className="relative">
+                                         <div className="relative rounded-[40px] overflow-hidden shadow-2xl group ">
                                             <img
                                                 src={item.img}
                                                 alt={item.title}
-                                                className="w-full h-100 object-cover transform group-hover:scale-105 transition-transform duration-700"
+                                                className="w-120 text-center  h-100 object-cover transform group-hover:scale-105 transition-transform duration-700"
                                             />
                                             {/* Overlay màu nhẹ khi hover */}
                                             <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500"></div>
@@ -156,6 +157,7 @@ const About = () => {
                                         <div className={`absolute -bottom-6 ${isEven ? '-right-6' : '-left-6'} w-24 h-24 ${item.bgColor} rounded-full flex items-center justify-center shadow-lg z-10 border-4 border-white`}>
                                             <item.icon size={40} className={item.color} />
                                         </div>
+                                       </div>
                                     </div>
 
                                     {/* --- CỘT NỘI DUNG --- */}
@@ -187,17 +189,6 @@ const About = () => {
                         })}
                     </div>
                 </div>
-            </section>
-
-            {/* ==================== 4. VIDEO SECTION ==================== */}
-            <section className="relative w-full h-125 flex items-center justify-center bg-fixed bg-cover bg-center" style={{ backgroundImage: "url('https://img.freepik.com/free-photo/chef-sprinkling-spices-dish_23-2148293774.jpg')" }}>
-                <div className="absolute inset-0 bg-black/50"></div>
-                <motion.div initial={{ scale: 0.8, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} className="z-10 text-center">
-                    <h2 className="text-white text-4xl md:text-6xl font-black mb-8 font-['Oleo_Script']">Experience the Taste <br /> of Perfection</h2>
-                    <button className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-[#9e1c20] shadow-2xl hover:scale-110 transition-transform cursor-pointer animate-pulse">
-                        <Play size={32} fill="#9e1c20" />
-                    </button>
-                </motion.div>
             </section>
 
             {/* ==================== 5. MEET OUR CHEFS (Giữ nguyên) ==================== */}

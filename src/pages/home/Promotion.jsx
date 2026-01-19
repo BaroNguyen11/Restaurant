@@ -1,127 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingCart, Flame, Minus, Plus } from 'lucide-react';
-import { useCart } from '@/context/CartContext';
+import { ShoppingCart, Flame, Minus, Plus, Loader2 } from 'lucide-react';
+import { useCart } from '../../context/CartContext'; // Đảm bảo đường dẫn đúng
+import { supabase } from '../../api'; // Import supabase client
 
-// Mock Data
-const offers = [
-    {
-        id: 1,
-        name: "Spicy Beef Burger",
-        discount: 25,
-        sold: 15,
-        total: 20,
-        originalPrice: 20.00,
-        salePrice: 15.00,
-        image: "https://png.pngtree.com/png-clipart/20250428/original/pngtree-hot-spicy-beef-burger-image-creat-png-image_20880960.png"
-    },
-    {
-
-        id: 2,
-
-        name: "Crispy Fried Chicken",
-
-        discount: 15,
-
-        sold: 45,
-
-        total: 100,
-
-        originalPrice: 18.00,
-
-        salePrice: 15.30,
-
-        image: "https://godrejyummiez.in/images/products/details/Non-Veg/Crispy_Fried_Chicken_Plate.png"
-
-    },
-
-    {
-
-        id: 3,
-
-        name: "Seafood Pizza XL",
-
-        discount: 40,
-
-        sold: 8,
-
-        total: 10,
-
-        originalPrice: 45.00,
-
-        salePrice: 27.00,
-
-        image: "https://citypizzadelivers.com/wp-content/uploads/2020/06/Pesto-Chicken-Artichoke.png"
-
-    },
-
-    {
-
-        id: 4,
-
-        name: "Fresh Garden Salad",
-
-        discount: 10,
-
-        sold: 22,
-
-        total: 50,
-
-        originalPrice: 12.00,
-
-        salePrice: 10.80,
-
-        image: "https://static.vecteezy.com/system/resources/previews/055/325/203/non_2x/fresh-garden-salad-served-on-a-transparent-plate-with-vibrant-vegetables-prepared-for-a-healthy-meal-salad-in-plate-isolated-on-transparent-background-free-png.png"
-
-    },
-
-    {
-
-        id: 5,
-
-        name: "Coca Cola Combo",
-
-        discount: 50,
-
-        sold: 90,
-
-        total: 100,
-
-        originalPrice: 8.00,
-
-        salePrice: 4.00,
-
-        image: "https://camperdowncellars.com.au/cdn/shop/files/cokecombo_1103x.png?v=1730178655"
-
-    },
-
-    {
-
-        id: 6,
-
-        name: "Cheese Pasta",
-
-        discount: 20,
-
-        sold: 30,
-
-        total: 60,
-
-        originalPrice: 25.00,
-
-        salePrice: 20.00,
-
-        image: "https://static.vecteezy.com/system/resources/previews/053/572/667/non_2x/penne-pasta-with-cheese-and-mushrooms-on-a-transparent-background-png.png"
-
-    },
-];
-
-// --- 1. Create a separate component for the Card ---
+// --- 1. OfferCard Component (Giữ nguyên logic, chỉ nhận data thật) ---
 const OfferCard = ({ item }) => {
     const [quantity, setQuantity] = useState(1);
-    const stock = item.total - item.sold;
-    const percentSold = (item.sold / item.total) * 100;
     const { addToCart } = useCart();
+
+    // Dữ liệu từ DB có thể thiếu sold/total, ta set mặc định để không lỗi UI
+    const total = item.total || 100;
+    const sold = item.sold || 10;
+    const stock = total - sold;
+    const percentSold = (sold / total) * 100;
 
     const handleDecrease = () => {
         if (quantity > 1) setQuantity(quantity - 1);
@@ -134,13 +26,13 @@ const OfferCard = ({ item }) => {
     const handleAddToCart = () => {
         const productToAdd = {
             ...item,
-            price: item.salePrice,
+            // Đảm bảo lấy đúng giá bán
+            price: item.salePrice || item.price, 
         };
-
         addToCart(productToAdd, quantity);
-
         setQuantity(1);
     };
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -149,9 +41,8 @@ const OfferCard = ({ item }) => {
             transition={{ duration: 0.5 }}
             className="bg-white p-4 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 flex gap-4 items-center group border border-gray-100"
         >
-            {/* ... Image Section ... */}
+            {/* Image Section */}
             <div className="relative w-1/3 h-32 shrink-0 bg-[#fff8f0] rounded-xl flex items-center justify-center p-2">
-                {/* ... Badge & Image ... */}
                 <div className="absolute top-0 left-0 bg-[#9e1c20] text-white text-xs font-bold px-2 py-1 rounded-tl-xl rounded-br-lg z-10">
                     -{item.discount}%
                 </div>
@@ -162,14 +53,14 @@ const OfferCard = ({ item }) => {
                 />
             </div>
 
-            {/* ... Info Section ... */}
+            {/* Info Section */}
             <div className="flex-1 flex flex-col justify-between h-full py-1">
                 <div>
-                    <h3 className="font-bold text-gray-800 text-lg leading-tight mb-2 group-hover:text-[#9e1c20] transition-colors">
+                    <h3 className="font-bold text-gray-800 text-lg leading-tight mb-2 group-hover:text-[#9e1c20] transition-colors line-clamp-1">
                         {item.name}
                     </h3>
                     <div className="mb-1 flex justify-between text-xs font-medium text-gray-500">
-                        <span>Sold: {item.sold}</span>
+                        <span>Sold: {sold}</span>
                         <span className="text-[#FFA500]">Available: {stock}</span>
                     </div>
                     <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -221,7 +112,53 @@ const OfferCard = ({ item }) => {
 // --- 2. Main Promotion Component ---
 const Promotion = () => {
     const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+    const [promotionItems, setPromotionItems] = useState([]);
+    const [loading, setLoading] = useState(true);
 
+    // 1. Fetch Data logic
+    useEffect(() => {
+        const fetchPromotions = async () => {
+            try {
+                setLoading(true);
+                // Lấy 6 sản phẩm từ bảng products
+                const { data, error } = await supabase
+                    .from('products')
+                    .select('*')
+                    .limit(6); // Giới hạn 6 cái
+
+                if (error) throw error;
+
+                if (data) {
+                    // Vì DB có thể không có cột discount/originalPrice, ta tự tính toán giả lập để UI đẹp
+                    const formattedData = data.map(item => {
+                        // Giả sử giá trong DB (item.price) là giá ĐÃ GIẢM (Sale Price)
+                        // Ta tự cộng thêm 20-30% để ra giá gốc (Original Price) giả định
+                        const randomDiscountPercent = Math.floor(Math.random() * (30 - 10 + 1)) + 10; // Random 10-30%
+                        const salePrice = item.price;
+                        const originalPrice = salePrice * (1 + randomDiscountPercent / 100);
+                        
+                        return {
+                            ...item,
+                            salePrice: salePrice,
+                            originalPrice: originalPrice,
+                            discount: randomDiscountPercent,
+                            sold: Math.floor(Math.random() * 50) + 10, // Random số lượng đã bán
+                            total: 100 // Giả định tổng kho
+                        };
+                    });
+                    setPromotionItems(formattedData);
+                }
+            } catch (error) {
+                console.error("Error fetching promotions:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPromotions();
+    }, []);
+
+    // 2. Timer Logic (Giữ nguyên)
     useEffect(() => {
         const targetDate = new Date();
         targetDate.setDate(targetDate.getDate() + 3);
@@ -255,7 +192,6 @@ const Promotion = () => {
             <div className="container mx-auto px-4">
                 {/* --- HEADER --- */}
                 <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
-                    {/* ... Title section ... */}
                     <div className="text-left">
                         <div className="flex items-center gap-2 mb-2">
                             <span className="bg-[#9e1c20] text-white p-1 rounded-full"><Flame size={18} fill="white" /></span>
@@ -266,7 +202,6 @@ const Promotion = () => {
                         </h2>
                     </div>
 
-                    {/* ... Timer section ... */}
                     <div className="flex gap-3 md:gap-4">
                         {timerComponents.map((item, idx) => (
                             <div key={idx} className="text-center group">
@@ -280,12 +215,17 @@ const Promotion = () => {
                 </div>
 
                 {/* --- GRID CARDS --- */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {offers.map((item) => (
-                        // Use the new OfferCard component here
-                        <OfferCard key={item.id} item={item} />
-                    ))}
-                </div>
+                {loading ? (
+                    <div className="flex justify-center items-center h-40">
+                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#9e1c20]"></div>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {promotionItems.map((item) => (
+                            <OfferCard key={item.id} item={item} />
+                        ))}
+                    </div>
+                )}
             </div>
         </section>
     );
