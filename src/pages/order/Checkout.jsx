@@ -309,11 +309,11 @@ const Checkout = () => {
     }, [user]);
 
     // Redirect if NO items to checkout (neither in cart nor direct buy)
-    // useEffect(() => {
-    //     if (finalCheckoutItems.length === 0) {
-    //         navigate('/order/order_food');
-    //     }
-    // }, [finalCheckoutItems, navigate]);
+    useEffect(() => {
+        if (finalCheckoutItems.length === 0) {
+            navigate('/order/order_food');
+        }
+    }, [finalCheckoutItems, navigate]);
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
