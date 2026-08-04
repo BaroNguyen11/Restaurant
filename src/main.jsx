@@ -1,76 +1,84 @@
-import { StrictMode } from 'react'
+import { StrictMode, lazy, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Home from './pages/home/Home.jsx'
-import About from './pages/about/About'
-import Menu from './pages/menu/Menu'
-import Contact from './pages/contact/Contact'
 import { CartProvider } from './context/CartContext'
-import OrderFood from './pages/order/OrderFood'
-import ProductDetails from './pages/order/ProductDetails'
-import OrderTable from './pages/order/OrderTable'
-import { AuthProvider } from './context/AuthContext'
-import Signin from './components/Signin'
-import Checkout from './pages/order/Checkout'
-import NotFound from './pages/NotFound'
 import ScrollToTop from './pages/ScrollToTop'
 import ModalLogin from './components/ModalLogin'
 import Chatbot from './components/ChatBot'
-import Profile from './pages/profile/Profile'
-import Info from './pages/profile/Info'
-import MyOrder from './pages/profile/MyOrder'
-import Settings from './pages/profile/Settings'
-import DashBoard from './admin/DashBoard'
-import Admin from './admin/Admin'
-import AdminProducts from './admin/AdminProducts'
-import AdminOrders from './admin/AdminOrders'
-import AdminReviews from './admin/AdminReviews'
-import AdminReservations from './admin/AdminReservations'
-import ManageUser from './admin/ManageUser'
-// import AdminRoute from './routes/AdminRoute'
+
+// Lazy load page components
+const Home = lazy(() => import('./pages/home/Home.jsx'))
+const About = lazy(() => import('./pages/about/About'))
+const Menu = lazy(() => import('./pages/menu/Menu'))
+const Contact = lazy(() => import('./pages/contact/Contact'))
+const OrderFood = lazy(() => import('./pages/order/OrderFood'))
+const ProductDetails = lazy(() => import('./pages/order/ProductDetails'))
+const OrderTable = lazy(() => import('./pages/order/OrderTable'))
+const Signin = lazy(() => import('./components/Signin'))
+const Checkout = lazy(() => import('./pages/order/Checkout'))
+const NotFound = lazy(() => import('./pages/NotFound'))
+const Profile = lazy(() => import('./pages/profile/Profile'))
+const Info = lazy(() => import('./pages/profile/Info'))
+const MyOrder = lazy(() => import('./pages/profile/MyOrder'))
+const Settings = lazy(() => import('./pages/profile/Settings'))
+const DashBoard = lazy(() => import('./admin/DashBoard'))
+const Admin = lazy(() => import('./admin/Admin'))
+const AdminProducts = lazy(() => import('./admin/AdminProducts'))
+const AdminOrders = lazy(() => import('./admin/AdminOrders'))
+const AdminReviews = lazy(() => import('./admin/AdminReviews'))
+const AdminReservations = lazy(() => import('./admin/AdminReservations'))
+const ManageUser = lazy(() => import('./admin/ManageUser'))
+
+import { AuthProvider as CustomAuthProvider } from './context/AuthContext' // Keep AuthContext import correct
+
+const PageLoader = () => (
+  <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3">
+    <div className="w-10 h-10 border-4 border-gray-100 border-t-[#9e1c20] rounded-full animate-spin"></div>
+    <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">Loading TasteNest...</p>
+  </div>
+);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <ScrollToTop />
-      <AuthProvider>
+      <CustomAuthProvider>
         <CartProvider>
           <ModalLogin />
           <Chatbot />
-          <Routes>
-            <Route path="/" element={<App />} >
-              <Route index element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/menu" element={<Menu />} />
-              <Route path="/order/order_food" element={<OrderFood />} />
-              <Route path="/order/order_table" element={<OrderTable />} />
-              <Route path="/product/:id" element={<ProductDetails />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/" element={<Profile />}>
-                <Route path='/infomation' element={<Info/>}/>
-                <Route path='/my_order' element={<MyOrder/>}/>
-                <Route path='/settings' element={<Settings/>}/>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<App />} >
+                <Route index element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/menu" element={<Menu />} />
+                <Route path="/order/order_food" element={<OrderFood />} />
+                <Route path="/order/order_table" element={<OrderTable />} />
+                <Route path="/product/:id" element={<ProductDetails />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/" element={<Profile />}>
+                  <Route path='/infomation' element={<Info/>}/>
+                  <Route path='/my_order' element={<MyOrder/>}/>
+                  <Route path='/settings' element={<Settings/>}/>
+                </Route>
+                <Route path="*" element={<NotFound />} />
               </Route>
-              <Route path="*" element={<NotFound />} />
-            </Route>
-            <Route path="/signin" element={<Signin />} />
-           {/* <Route element={<AdminRoute/>}> */}
-             <Route path='/admin' element={<Admin />}>
-              <Route index element={<DashBoard />} />
-              <Route path='products' element={<AdminProducts />} />
-              <Route path='orders' element={<AdminOrders />} />
-              <Route path='reviews' element={<AdminReviews />} />
-              <Route path='reservations' element={<AdminReservations />} />
-              <Route path='users' element={<ManageUser />} />
-            {/* </Route> */}
-           </Route>
-          </Routes>
+              <Route path="/signin" element={<Signin />} />
+              <Route path='/admin' element={<Admin />}>
+                <Route index element={<DashBoard />} />
+                <Route path='products' element={<AdminProducts />} />
+                <Route path='orders' element={<AdminOrders />} />
+                <Route path='reviews' element={<AdminReviews />} />
+                <Route path='reservations' element={<AdminReservations />} />
+                <Route path='users' element={<ManageUser />} />
+              </Route>
+            </Routes>
+          </Suspense>
         </CartProvider>
-      </AuthProvider>
+      </CustomAuthProvider>
     </BrowserRouter>
-
   </StrictMode>,
 )
