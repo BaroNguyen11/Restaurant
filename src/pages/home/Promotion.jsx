@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ShoppingCart, Flame, Minus, Plus, Loader2 } from 'lucide-react';
 import { useCart } from '../../context/CartContext'; // Đảm bảo đường dẫn đúng
 import { supabase } from '../../api'; // Import supabase client
+import { animateFlyToCart } from '../../lib/cartAnimation';
 
 // --- 1. OfferCard Component (Giữ nguyên logic, chỉ nhận data thật) ---
 const OfferCard = ({ item }) => {
@@ -29,6 +30,8 @@ const OfferCard = ({ item }) => {
             // Đảm bảo lấy đúng giá bán
             price: item.salePrice || item.price, 
         };
+        const imgEl = document.getElementById(`promo-img-${item.id}`);
+        animateFlyToCart(imgEl, item.image);
         addToCart(productToAdd, quantity);
         setQuantity(1);
     };
@@ -47,6 +50,7 @@ const OfferCard = ({ item }) => {
                     -{item.discount}%
                 </div>
                 <img
+                    id={`promo-img-${item.id}`}
                     src={item.image}
                     alt={item.name}
                     className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"

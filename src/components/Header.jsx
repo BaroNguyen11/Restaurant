@@ -11,7 +11,9 @@ import { supabase } from '@/api';
 
 const Header = () => {
     const { toggleCart, cartCount, clearCart } = useCart();
-    const { user, signOut } = useAuth();
+    const { user, signOut,profile } = useAuth();
+    // console.log(profile);
+    
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     const [role, setRole] = useState('user');
     const navigate = useNavigate();
@@ -72,6 +74,7 @@ const Header = () => {
 
                     {/* NÚT GIỎ HÀNG (Đã update logic) */}
                     <button
+                        id="cart-btn"
                         onClick={toggleCart} // 4. Sự kiện mở giỏ hàng
                         className="relative hover:text-[#9e1c20] transition-colors group cursor-pointer"
                     >
@@ -100,7 +103,7 @@ const Header = () => {
                                                 <p className="text-xs text-gray-500">Member</p>
                                             </div>
                                             <img
-                                                src={user.user_metadata.avatar_url}
+                                                src={profile?.avatar_url || "https://github.com/shadcn.png"}
                                                 alt="Avatar"
                                                 className="w-10 h-10 rounded-full border-2 border-[#9e1c20]"
                                             />

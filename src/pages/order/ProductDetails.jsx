@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Star, Minus, Plus, ShoppingCart, Check, ChevronRight, ArrowLeft } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { animateFlyToCart } from '../../lib/cartAnimation';
 import { supabase } from '../../api'; // Import Supabase Client
 import ProductReviews from './ProductsReviews';
 import { Header } from '@radix-ui/react-accordion';
@@ -77,6 +78,8 @@ const ProductDetails = () => {
 
     const handleAddToCart = () => {
         if (product) {
+            const imgEl = document.getElementById("detail-prod-img");
+            animateFlyToCart(imgEl, product.image);
             addToCart(product, quantity);
             // Có thể thêm Toast thông báo "Đã thêm vào giỏ" ở đây
         }
@@ -119,6 +122,7 @@ const ProductDetails = () => {
                         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
 
                         <motion.img
+                            id="detail-prod-img"
                             key={product.image}
                             initial={{ scale: 0.8, rotate: -5 }}
                             animate={{ scale: 1, rotate: 0 }}

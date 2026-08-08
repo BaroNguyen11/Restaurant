@@ -34,9 +34,15 @@ const ManageUser = lazy(() => import('./admin/ManageUser'))
 import { AuthProvider as CustomAuthProvider } from './context/AuthContext' // Keep AuthContext import correct
 
 const PageLoader = () => (
-  <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3">
-    <div className="w-10 h-10 border-4 border-gray-100 border-t-[#9e1c20] rounded-full animate-spin"></div>
-    <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">Loading TasteNest...</p>
+  <div className="fixed top-0 left-0 w-full h-[3px] bg-transparent z-[9999] overflow-hidden">
+    <div className="h-full bg-[#9e1c20] shadow-[0_0_8px_#9e1c20,0_0_5px_#9e1c20] animate-[loading-bar_1.5s_infinite_ease-in-out]"></div>
+    <style>{`
+      @keyframes loading-bar {
+        0% { transform: translateX(-100%); }
+        50% { transform: translateX(-30%); }
+        100% { transform: translateX(100%); }
+      }
+    `}</style>
   </div>
 );
 

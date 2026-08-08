@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
 
-export const useAddresses = (userId, userMetadata = null) => {
+export const useAddresses = (userId, profile = null) => {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -14,20 +14,46 @@ export const useAddresses = (userId, userMetadata = null) => {
       const stored = localStorage.getItem(localKey);
       if (stored) {
         const parsed = JSON.parse(stored);
-        setAddresses(parsed);
-        const defaultAddr = parsed.find(a => a.isDefault) || parsed[0];
-        if (defaultAddr) {
-          setSelectedAddressId(defaultAddr.id);
-          setSelectedAddress(defaultAddr);
+        
+        // Tìm và tự động cập nhật lại địa chỉ mặc định 'addr_default' nếu nó bị trống nhưng profile đã có dữ liệu
+        let hasUpdated = false;
+        const updatedParsed = parsed.map(addr => {
+          if (addr.id === 'addr_default' && (!addr.address || !addr.phone) && (profile?.address || profile?.phone)) {
+            hasUpdated = true;
+            return {
+              ...addr,
+              fullName: profile?.full_name || addr.fullName || '',
+              phone: profile?.phone || addr.phone || '',
+              address: profile?.address || addr.address || '',
+            };
+          }
+          return addr;
+        });
+
+        if (hasUpdated) {
+          setAddresses(updatedParsed);
+          localStorage.setItem(localKey, JSON.stringify(updatedParsed));
+          const defaultAddr = updatedParsed.find(a => a.isDefault) || updatedParsed[0];
+          if (defaultAddr) {
+            setSelectedAddressId(defaultAddr.id);
+            setSelectedAddress(defaultAddr);
+          }
+        } else {
+          setAddresses(parsed);
+          const defaultAddr = parsed.find(a => a.isDefault) || parsed[0];
+          if (defaultAddr) {
+            setSelectedAddressId(defaultAddr.id);
+            setSelectedAddress(defaultAddr);
+          }
         }
       } else {
-        // Fallback: create default starting address using User profile info
+        // Fallback: tạo địa chỉ mặc định từ thông tin Profile của Database
         const initialAddr = {
           id: 'addr_default',
           label: 'Home',
-          fullName: userMetadata?.full_name || '',
-          phone: '',
-          address: '',
+          fullName: profile?.full_name || '',
+          phone: profile?.phone || '',
+          address: profile?.address || '',
           isDefault: true
         };
         const defaultList = [initialAddr];
@@ -41,7 +67,7 @@ export const useAddresses = (userId, userMetadata = null) => {
       setSelectedAddressId(null);
       setSelectedAddress(null);
     }
-  }, [userId, localKey, userMetadata]);
+  }, [userId, localKey, profile]);
 
   const selectAddress = useCallback((addrId) => {
     setSelectedAddressId(addrId);

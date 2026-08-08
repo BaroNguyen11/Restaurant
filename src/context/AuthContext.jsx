@@ -89,6 +89,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         user,
         profile,
+        setProfile,
         signInWithGoogle,
         signOut,
         loading,
@@ -96,7 +97,22 @@ export const AuthProvider = ({ children }) => {
         loginWithEmail,
       }}
     >
-      {!loading && children}
+      {loading ? (
+        <div className="fixed inset-0 bg-[#f9f9f9] z-[10000] flex flex-col items-center justify-center gap-4 font-['Poppins']">
+          <div className="relative flex items-center justify-center">
+            {/* Pulsing glow outer ring */}
+            <div className="absolute w-16 h-16 rounded-full border-4 border-[#9e1c20]/20 animate-ping"></div>
+            {/* Spinning loader */}
+            <div className="w-16 h-16 border-4 border-gray-100 border-t-[#9e1c20] rounded-full animate-spin"></div>
+          </div>
+          <div className="text-center mt-2">
+            <h2 className="text-[#9e1c20] text-xl font-black tracking-wider uppercase mb-1">TasteNest</h2>
+            <p className="text-gray-400 text-xs font-bold uppercase tracking-widest animate-pulse">Loading experience...</p>
+          </div>
+        </div>
+      ) : (
+        children
+      )}
     </AuthContext.Provider>
   );
 };

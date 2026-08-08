@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ShoppingCart, Star,  ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import ReactPaginate from 'react-paginate';
+import { animateFlyToCart } from '../../lib/cartAnimation';
 import { supabase } from '../../api';
 import { Link } from 'react-router-dom';
 
@@ -132,6 +133,7 @@ const OrderFood = () => {
                                             {/* Link bao quanh ảnh */}
                                             <Link to={`/product/${item.id}`} className="flex w-full h-full items-center justify-center">
                                                 <img 
+                                                    id={`prod-img-${item.id}`}
                                                     src={item.image} 
                                                     alt={item.name} 
                                                     className="w-36 h-36 object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-md cursor-pointer flex items-center justify-center" 
@@ -162,6 +164,8 @@ const OrderFood = () => {
                                             <button 
                                                 onClick={(e) => {
                                                     e.stopPropagation(); // Ngăn click lan ra ngoài link
+                                                    const imgEl = document.getElementById(`prod-img-${item.id}`);
+                                                    animateFlyToCart(imgEl, item.image);
                                                     addToCart(item);
                                                 }} 
                                                 className="hover:bg-[#c32a2f] text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg bg-[#9e1c20] transition-colors active:scale-90 cursor-pointer"

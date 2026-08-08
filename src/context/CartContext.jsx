@@ -69,7 +69,7 @@ export const CartProvider = ({ children }) => {
         }
 
         setCartItems(newCart);
-        setIsCartOpen(true);
+        // setIsCartOpen(true);
 
         // -- Đồng bộ lên Supabase --
         try {
@@ -144,6 +144,26 @@ export const CartProvider = ({ children }) => {
             await supabase.from('cart_items').delete().eq('user_id', user.id);
         }
     };
+
+    // --- 7. HÀM XÓA CÁC MÓN ĐÃ CHỌN (Sau khi thanh toán từng món) ---
+    const removeItemsFromCart = async (productIds) => {
+        setCartItems((prev) => prev.filter((item) => !productIds.includes(item.id)));
+        if (!user) {
+            const savedCart = localStorage.getItem('cartItems');
+            if (savedCart) {
+                const parsed = JSON.parse(savedCart);
+                const filtered = parsed.filter((item) => !productIds.includes(item.id));
+                localStorage.setItem('cartItems', JSON.stringify(filtered));
+            }
+        } else {
+            await supabase
+                .from('cart_items')
+                .delete()
+                .eq('user_id', user.id)
+                .in('product_id', productIds);
+        }
+    };
+
     // Mở/Đóng giỏ hàng
     const toggleCart = () => {
         if (!user) {
@@ -177,6 +197,7 @@ export const CartProvider = ({ children }) => {
                 cartTotal,
                 cartCount,
                 clearCart,
+                removeItemsFromCart,
                 showLoginModal,
                 setShowLoginModal
             }}

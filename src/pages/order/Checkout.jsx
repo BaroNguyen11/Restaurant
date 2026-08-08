@@ -12,8 +12,8 @@ import useAddresses from '../../hooks/useAddresses';
 const Checkout = () => {
     const navigate = useNavigate();
     const location = useLocation(); // Hook to access state passed from "Buy Again"
-    const { cartItems, cartTotal, clearCart } = useCart();
-    const { user } = useAuth();
+    const { cartItems, cartTotal, clearCart, removeItemsFromCart } = useCart();
+    const { user, profile } = useAuth();
 
     const [loading, setLoading] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState('cod'); 
@@ -31,7 +31,7 @@ const Checkout = () => {
         selectAddress,
         addAddress,
         deleteAddress
-    } = useAddresses(user?.id, user?.user_metadata);
+    } = useAddresses(user?.id, profile);
 
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
     const [newAddress, setNewAddress] = useState({
@@ -50,12 +50,12 @@ const Checkout = () => {
             });
         } else {
             setFormData({
-                fullName: user?.user_metadata?.full_name || '',
-                phone: '',
-                address: ''
+                fullName: profile?.full_name || user?.user_metadata?.full_name || '',
+                phone: profile?.phone || '',
+                address: profile?.address || ''
             });
         }
-    }, [selectedAddress, user]);
+    }, [selectedAddress, user, profile]);
 
     const handleAddAddressSubmit = (e) => {
         e.preventDefault();
@@ -81,8 +81,8 @@ const Checkout = () => {
     };
 
     // --- LOGIC: DETERMINE ITEMS TO CHECKOUT ---
-    // Check if there is data from "Buy Again"
-    const isDirectBuy = location.state?.isBuyAgain;
+    // Check if there is data from "Buy Again" or selective checkout
+    const isDirectBuy = location.state?.isDirectBuy || location.state?.isBuyAgain;
     const directItems = location.state?.directCheckoutItems || [];
 
     // If direct buy, use those items; otherwise, use cart
@@ -131,8 +131,12 @@ const Checkout = () => {
 
             if (orderError) throw orderError;
 
-            // Only clear cart if it was a regular checkout
-            if (!isDirectBuy) {
+            // Clear only checkout items if it was a selective checkout
+            const isBuyAgain = location.state?.isBuyAgain;
+            if (isDirectBuy && !isBuyAgain && directItems.length > 0) {
+                const checkoutItemIds = directItems.map(item => item.id);
+                removeItemsFromCart(checkoutItemIds);
+            } else if (!isDirectBuy) {
                 clearCart();
             }
 
@@ -278,13 +282,6 @@ const Checkout = () => {
                                         </div>
                                     )}
 
-                                    {selectedAddressId && (
-                                        <div className="mt-6 bg-[#fff8f0] p-4.5 rounded-2xl border border-orange-100 text-xs text-gray-600 space-y-1">
-                                            <div className="font-bold text-gray-800 text-sm">Giao tới địa chỉ đã chọn:</div>
-                                            <div><span className="font-semibold text-gray-700">Khách hàng:</span> {formData.fullName} ({formData.phone})</div>
-                                            <div><span className="font-semibold text-gray-700">Địa chỉ:</span> {formData.address}</div>
-                                        </div>
-                                    )}
                                 </div>
                             )}
                         </div>
